@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:venue_vista/Pages/HomePage.dart';
+import 'package:venue_vista/Pages/HomeScreen.dart';
 
 class SignInPage extends StatefulWidget {
   @override

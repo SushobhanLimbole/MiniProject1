@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   google_fonts: ^6.2.1
   table_calendar: ^3.1.2
+  flutter_image_carousel_slider: ^2.0.1
 
 dev_dependencies:
   flutter_test:
@@ -63,6 +64,13 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/logo.png
+    - images/Logo.jpeg
+    - images/Aud1.jpeg
+    - images/Aud2.jpeg
+    - images/Aud3.jpeg
+    - images/Aud4.jpeg
+    - images/Aud5.jpeg
+    - images/Aud6.jpeg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
