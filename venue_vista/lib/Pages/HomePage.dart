@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
               onPressed: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => Demo(),
+                    builder: (context) => DepartmentBarChart(),
                   )),
               child: Text('Test')),
           if (_selectedDay != null)
