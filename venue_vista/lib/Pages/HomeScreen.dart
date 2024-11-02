@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_image_carousel_slider/asset_image_carousel_slider_left_right_show.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:venue_vista/Pages/SignInPage.dart';
 import 'package:venue_vista/Pages/Title.dart';
-import 'package:venue_vista/Pages/screen%206.dart';
+import 'package:venue_vista/Pages/request.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -61,7 +60,7 @@ class _HomePageState extends State<HomePage> {
                       padding: const EdgeInsets.all(8.0),
                       child: ListTile(
                         tileColor: Colors.grey.shade600,
-                        title: Text("History"),
+                        title: Text("Notification"),
                         onTap: () {},
                       ),
                     ),
@@ -74,14 +73,6 @@ class _HomePageState extends State<HomePage> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => AuditoriumScreen())),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ListTile(
-                        tileColor: Colors.grey.shade600,
-                        title: Text("Notification"),
-                        onTap: () {},
                       ),
                     ),
                     Padding(
@@ -112,7 +103,7 @@ class _HomePageState extends State<HomePage> {
         //leading: Icon(Icons.sort),
         backgroundColor: Color.fromRGBO(243, 193, 202, 1),
         title: Text(
-          'Home',
+          'Venue Vista',
           style: GoogleFonts.poppins(),
         ),
       ),
@@ -126,8 +117,8 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Container(
-                    height: 70,
-                    width: 70,
+                    height: 60,
+                    width: 60,
                     decoration: BoxDecoration(
                         border: Border.all(width: 1),
                         borderRadius: BorderRadius.circular(80),
@@ -141,7 +132,7 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Text(
-                        "Welcome to Auditorium Booking App",
+                        "Welcome to Venue Vista",
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 20),
                       ),
@@ -162,7 +153,7 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.only(top:5.0,right:15.0,bottom:5.0),
               child: AssetImageCarouselSliderLeftRightShow(
                 items: imageList,
-                imageHeight: MediaQuery.sizeOf(context).width,
+                imageHeight: 400,
                 dotColor: Colors.grey.shade900,
               ),
             ),
@@ -173,7 +164,7 @@ class _HomePageState extends State<HomePage> {
                 onTap: () => Navigator.push(context,
                     MaterialPageRoute(builder: (context) => TitlePage())),
                 child: Container(
-                  height: 70,
+                  height: 50,
                   width: MediaQuery.sizeOf(context).width,
                   decoration: BoxDecoration(
                       color: Colors.grey.shade300,
