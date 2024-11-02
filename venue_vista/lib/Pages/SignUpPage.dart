@@ -18,7 +18,7 @@ class _SignUpPageState extends State<SignUpPage> {
   String? selectedRole; // This will hold the selected role from the dropdown
   String? selectedDepartment;
 
-  final List<String> roles = ['Admin', 'Client']; // Roles list
+  final List<String> roles = ['Client']; // Roles list
   final List<String> departments = [
     'CSE',
     'Mechanical',

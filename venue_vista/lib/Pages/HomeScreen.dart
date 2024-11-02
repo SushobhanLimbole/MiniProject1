@@ -100,8 +100,7 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.all(20.0),
               child: ElevatedButton(
                   onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => SignInPage()));
+                    
                   },
                   child: Text("Logout")),
             ),
@@ -160,7 +159,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.only(top:5.0,right:15.0,bottom:5.0),
               child: AssetImageCarouselSliderLeftRightShow(
                 items: imageList,
                 imageHeight: MediaQuery.sizeOf(context).width,
