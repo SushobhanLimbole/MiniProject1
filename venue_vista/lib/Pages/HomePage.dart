@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:venue_vista/Pages/EventHighlight.dart';
 import 'package:venue_vista/Pages/Test.dart';
 import 'package:venue_vista/constants.dart';
 import 'package:venue_vista/drawer.dart';
@@ -160,7 +161,14 @@ class _HomePageState extends State<HomePage> {
               ..._events[_selectedDay!.toUtc()]?.map((event) => Container(
                         child: Text(event),
                       )) ?? 
-                  [ListTile(title: Text('No Events'))]
+                  [ListTile(title: Text('No Events'))],
+            // Expanded(
+            //   child: ListView.builder(
+            //     itemCount: 2,
+            //     itemBuilder: (context,index){
+            //     return EventDetail();
+            //   })
+            // ),
           ],
         ),
       ),
