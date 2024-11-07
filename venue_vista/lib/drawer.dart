@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:venue_vista/Pages/report.dart';
+import 'package:venue_vista/Pages/request.dart';
 import 'package:venue_vista/constants.dart';
 
 class AppDrawer extends StatefulWidget {
@@ -90,9 +91,7 @@ class _AppDrawerState extends State<AppDrawer> {
               color: secondaryColor,
             ),
             title: Text('Booking Verification',style: GoogleFonts.poppins(color: secondaryColor,)),
-            onTap: () {
-              // Handle navigation
-            },
+            onTap: ()=>Navigator.push(context,MaterialPageRoute(builder: (context)=>AuditoriumScreen())),
           ),
           // const Divider(),
           ListTile(
