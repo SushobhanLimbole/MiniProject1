@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:venue_vista/Pages/Bookings.dart';
+import 'package:venue_vista/Pages/profile.dart';
 import 'package:venue_vista/Pages/report.dart';
 import 'package:venue_vista/Pages/request.dart';
 import 'package:venue_vista/constants.dart';
@@ -53,14 +55,19 @@ class _AppDrawerState extends State<AppDrawer> {
                       },
                     ),
                   )
-                : CircleAvatar(
-                    radius: 50,
-                    backgroundColor: primaryColor,
-                    child: Text(
-                      'SG',
-                      style: TextStyle(fontSize: 25),
+                : InkWell(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>ProfileScreen()));
+                  },
+                  child: CircleAvatar(
+                      radius: 50,
+                      backgroundColor: primaryColor,
+                      child: Text(
+                        'SG',
+                        style: TextStyle(fontSize: 25),
+                      ),
                     ),
-                  ),
+                ),
           ),
           ListTile(
             leading: const Icon(
@@ -68,7 +75,7 @@ class _AppDrawerState extends State<AppDrawer> {
               color: secondaryColor,
             ),
             title: Text('My Bookings',style: GoogleFonts.poppins(color: secondaryColor,)),
-            onTap: () {},
+            onTap: ()=>Navigator.push(context,MaterialPageRoute(builder: (context)=>Booking())),
           ),
           ListTile(
               leading: const Icon(

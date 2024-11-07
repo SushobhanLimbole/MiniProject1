@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:venue_vista/Pages/request.dart';
 import 'package:venue_vista/constants.dart';
 
-class AuditoriumScreen extends StatelessWidget {
+class Booking extends StatelessWidget {
   final DateTime requestTime =
       DateTime(2024, 10, 25, 14, 30); // Adjust to your needs
 
@@ -22,7 +23,7 @@ class AuditoriumScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Pending Requests',
+              'My Bookings',
               style: TextStyle(
                 color: secondaryColor,
                 fontSize: 20,
@@ -36,9 +37,7 @@ class AuditoriumScreen extends StatelessWidget {
                 ),
                 elevation: 5,
                 child: InkWell(
-                  onTap: () {
-                    showBottomSheet(context);
-                  },
+                  onTap: (){showBottomSheet(context);},
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Row(
@@ -55,7 +54,7 @@ class AuditoriumScreen extends StatelessWidget {
                                 style: TextStyle(fontSize: 16,color: secondaryColor)),
                             Text('Dept: CSE', style: TextStyle(fontSize: 16,color: secondaryColor)),
                             Text('From: XYZ', style: TextStyle(fontSize: 16,color: secondaryColor)),
-                            Text('Requested ${formattedTimePassed} ago',
+                            Text('${formattedTimePassed} ago accepted',
                                 style:
                                     TextStyle(fontSize: 12, color: Colors.grey)),
                           ],
@@ -70,19 +69,6 @@ class AuditoriumScreen extends StatelessWidget {
       ),
     );
   }
-
-  String formatDuration(Duration duration) {
-    if (duration.inDays > 0) {
-      return '${duration.inDays} day${duration.inDays > 1 ? 's' : ''}';
-    } else if (duration.inHours > 0) {
-      return '${duration.inHours} hour${duration.inHours > 1 ? 's' : ''}';
-    } else if (duration.inMinutes > 0) {
-      return '${duration.inMinutes} minute${duration.inMinutes > 1 ? 's' : ''}';
-    } else {
-      return '${duration.inSeconds} second${duration.inSeconds > 1 ? 's' : ''}';
-    }
-  }
-}
 
   void showBottomSheet(BuildContext context) {
     showModalBottomSheet(
@@ -137,39 +123,6 @@ class AuditoriumScreen extends StatelessWidget {
                         DetailRow(
                             label: 'Time Slot', value: '2:00 PM - 4:00 PM'),
                         SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: Text('ACCEPT'),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.green,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 10),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                              ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: Text('REJECT'),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.red,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 10),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
                       ],
                     ),
                   ),
@@ -192,32 +145,5 @@ class AuditoriumScreen extends StatelessWidget {
     } else {
       return '${duration.inSeconds} second${duration.inSeconds > 1 ? 's' : ''}';
     }
-  }
-
-class DetailRow extends StatelessWidget {
-  final String label;
-  final String value;
-
-  DetailRow({required this.label, required this.value});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-          ),
-          SizedBox(height: 4.0),
-          Text(
-            value,
-            style: TextStyle(fontSize: 16,color: secondaryColor),
-          ),
-        ],
-      ),
-    );
   }
 }
