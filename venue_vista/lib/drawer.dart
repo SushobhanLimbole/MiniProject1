@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:venue_vista/Pages/SignInPage.dart';
 import 'package:venue_vista/Pages/Test.dart';
 import 'package:venue_vista/constants.dart';
 
@@ -24,12 +25,12 @@ class _AppDrawerState extends State<AppDrawer> {
                 const BoxDecoration(color: Color.fromARGB(255, 255, 255, 255)),
             accountName: InkWell(
               child: Text(
-                'Sakshi Pranav Ghorpade',
+                'Username',
                 style: GoogleFonts.poppins(color: secondaryColor),
               ),
             ),
             accountEmail:
-                Text('sakshi❤️pranav556@gmail.com', style: GoogleFonts.poppins(color: secondaryColor)),
+                Text('useremail123@gmail.com', style: GoogleFonts.poppins(color: secondaryColor)),
             currentAccountPicture: userPic != ''
                 ? ClipOval(
                     child: Image.network(
@@ -56,7 +57,7 @@ class _AppDrawerState extends State<AppDrawer> {
                     radius: 50,
                     backgroundColor: primaryColor,
                     child: Text(
-                      'SG',
+                      'US',
                       style: TextStyle(fontSize: 25),
                     ),
                   ),
@@ -111,7 +112,7 @@ class _AppDrawerState extends State<AppDrawer> {
             title: Text('Help',style: GoogleFonts.poppins(color: secondaryColor,)),
             onTap: () {},
           ),
-          ListTile(
+          ListTile( 
             leading: const Icon(
               Icons.logout,
               color: Colors.red,
@@ -120,9 +121,9 @@ class _AppDrawerState extends State<AppDrawer> {
             onTap: () {
               // Handle navigation
 
-              // Navigator.of(context).pushReplacement(
-              //   MaterialPageRoute(builder: (context) => const LoginScreen()),
-              // );
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => SignInPage()),
+              );
             },
           ),
         ],
