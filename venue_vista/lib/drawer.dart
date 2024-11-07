@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:venue_vista/Pages/Test.dart';
+import 'package:venue_vista/Pages/report.dart';
 import 'package:venue_vista/constants.dart';
 
 class AppDrawer extends StatefulWidget {
@@ -75,14 +75,14 @@ class _AppDrawerState extends State<AppDrawer> {
                 color: secondaryColor,
               ),
               title: Text('Monthly Report',style: GoogleFonts.poppins(color: secondaryColor,)),
-              onTap: () {}),
+              onTap: ()=>Navigator.push(context,MaterialPageRoute(builder: (context)=>DepartmentBarChart()))),
           ListTile(
             leading: const Icon(
               Icons.bar_chart,
               color: secondaryColor,
             ),
             title: Text('Yearly Report',style: GoogleFonts.poppins(color: secondaryColor,)),
-            onTap: () {},
+            onTap: ()=>Navigator.push(context,MaterialPageRoute(builder: (context)=>DepartmentBarChart())),
           ),
           ListTile(
             leading: const Icon(

@@ -41,103 +41,111 @@ class _HomePageState extends State<HomePage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            TableCalendar(
-              firstDay: DateTime.utc(2020, 1, 1),
-              lastDay: DateTime.utc(2030, 12, 31),
-              focusedDay: _focusedDay,
-              selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-              calendarFormat: _calendarFormat,
-              onDaySelected: (selectedDay, focusedDay) {
-                setState(() {
-                  _selectedDay = selectedDay;
-                  _focusedDay = focusedDay; 
-                });
-              },
-              eventLoader: (day) {
-                return _events[day] ?? [];
-              },
-              onFormatChanged: (format) {
-                if (_calendarFormat != format) {
-                  setState(() {
-                    _calendarFormat = format;
-                  });
-                }
-              },
-              onPageChanged: (focusedDay) {
-                _focusedDay = focusedDay;
-              },
-              calendarStyle: CalendarStyle(
-                isTodayHighlighted: true,
-                selectedDecoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [primaryColor, primaryColor.withOpacity(0.7)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  shape: BoxShape.circle,
-                ),
-                todayDecoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [secondaryColor, secondaryColor.withOpacity(0.7)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  shape: BoxShape.circle,
-                ),
-                weekendTextStyle: TextStyle(
-                  color: secondaryColor,
-                  fontWeight: FontWeight.w600,
-                ),
-                holidayTextStyle: TextStyle(
-                  color: primaryColor,
-                  fontWeight: FontWeight.bold,
-                ),
-                outsideDaysVisible: true,
-                outsideTextStyle: TextStyle(color: Colors.grey.shade500),
-                disabledTextStyle: TextStyle(color: Colors.grey.shade300),
-                selectedTextStyle: TextStyle(
-                  color: secondaryColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-                todayTextStyle: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-                defaultTextStyle: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: secondaryColor,
-                ),
-                withinRangeTextStyle: TextStyle(color: secondaryColor),
+            Container(
+              margin: EdgeInsets.all(4),
+              padding: EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                border: Border.all(color: secondaryColor,width: 1),
+                borderRadius: BorderRadius.circular(4)
               ),
-              headerStyle: HeaderStyle(
-                titleTextStyle: TextStyle(
-                  color: secondaryColor,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+              child: TableCalendar(
+                firstDay: DateTime.utc(2020, 1, 1),
+                lastDay: DateTime.utc(2030, 12, 31),
+                focusedDay: _focusedDay,
+                selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                calendarFormat: _calendarFormat,
+                onDaySelected: (selectedDay, focusedDay) {
+                  setState(() {
+                    _selectedDay = selectedDay;
+                    _focusedDay = focusedDay; 
+                  });
+                },
+                eventLoader: (day) {
+                  return _events[day] ?? [];
+                },
+                onFormatChanged: (format) {
+                  if (_calendarFormat != format) {
+                    setState(() {
+                      _calendarFormat = format;
+                    });
+                  }
+                },
+                onPageChanged: (focusedDay) {
+                  _focusedDay = focusedDay;
+                },
+                calendarStyle: CalendarStyle(
+                  isTodayHighlighted: true,
+                  selectedDecoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [primaryColor, primaryColor.withOpacity(0.7)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    shape: BoxShape.circle,
+                  ),
+                  todayDecoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [secondaryColor, secondaryColor.withOpacity(0.7)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    shape: BoxShape.circle,
+                  ),
+                  weekendTextStyle: TextStyle(
+                    color: secondaryColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  holidayTextStyle: TextStyle(
+                    color: primaryColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  outsideDaysVisible: true,
+                  outsideTextStyle: TextStyle(color: Colors.grey.shade500),
+                  disabledTextStyle: TextStyle(color: Colors.grey.shade300),
+                  selectedTextStyle: TextStyle(
+                    color: secondaryColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                  todayTextStyle: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                  defaultTextStyle: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: secondaryColor,
+                  ),
+                  withinRangeTextStyle: TextStyle(color: secondaryColor),
                 ),
-                titleCentered: true,
-                formatButtonVisible: true,
-                formatButtonDecoration: BoxDecoration(
-                  color: primaryColor,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                formatButtonTextStyle: TextStyle(
-                  color: secondaryColor,
-                  fontSize: 16,
-                  // fontWeight: FontWeight.w600,
-                ),
-                leftChevronIcon: Icon(
-                  Icons.chevron_left,
-                  color: secondaryColor,
-                  size: 28,
-                ),
-                rightChevronIcon: Icon(
-                  Icons.chevron_right,
-                  color: secondaryColor,
-                  size: 28,
+                headerStyle: HeaderStyle(
+                  titleTextStyle: TextStyle(
+                    color: secondaryColor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  titleCentered: true,
+                  formatButtonVisible: true,
+                  formatButtonDecoration: BoxDecoration(
+                    color: primaryColor,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  formatButtonTextStyle: TextStyle(
+                    color: secondaryColor,
+                    fontSize: 16,
+                    // fontWeight: FontWeight.w600,
+                  ),
+                  leftChevronIcon: Icon(
+                    Icons.chevron_left,
+                    color: secondaryColor,
+                    size: 28,
+                  ),
+                  rightChevronIcon: Icon(
+                    Icons.chevron_right,
+                    color: secondaryColor,
+                    size: 28,
+                  ),
                 ),
               ),
             ),
@@ -145,7 +153,7 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => DepartmentBarChart(),
+                      builder: (context) => Demo(),
                     )),
                 child: Text('Test')),
             if (_selectedDay != null)
