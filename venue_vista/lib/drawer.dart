@@ -24,12 +24,12 @@ class _AppDrawerState extends State<AppDrawer> {
                 const BoxDecoration(color: Color.fromARGB(255, 255, 255, 255)),
             accountName: InkWell(
               child: Text(
-                'Sakshi Pranav Ghorpade',
+                'Username',
                 style: GoogleFonts.poppins(color: secondaryColor),
               ),
             ),
             accountEmail:
-                Text('sakshi❤️pranav556@gmail.com', style: GoogleFonts.poppins(color: secondaryColor)),
+                Text('useremail1236@gmail.com', style: GoogleFonts.poppins(color: secondaryColor)),
             currentAccountPicture: userPic != ''
                 ? ClipOval(
                     child: Image.network(
