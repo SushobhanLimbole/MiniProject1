@@ -80,12 +80,12 @@ class _DemoState extends State<Demo> {
                           fontSize: 20, fontWeight: FontWeight.w500),
                     ),
                   ),
-                  // SizedBox(height: 15),
+                  SizedBox(height: 15),
 
-                  // TimePickerDialog(
-                  //   initialTime: TimeOfDay.now(),
-                  //   initialEntryMode: TimePickerEntryMode.inputOnly,
-                  // ),
+                  TimePickerDialog(
+                    initialTime: TimeOfDay.now(),
+                    initialEntryMode: TimePickerEntryMode.inputOnly,
+                  ),
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -95,21 +95,21 @@ class _DemoState extends State<Demo> {
                     ],
                   ),
 
-                  // Container(
-                  //   child: Text(
-                  //     _selectedTime != null
-                  //         ? "Selected Time: ${_selectedTime!.format(context)}"
-                  //         : "No time selected",
-                  //     style: TextStyle(fontSize: 18),
-                  //   ),
-                  // ),
+                  Container(
+                    child: Text(
+                      _selectedTime != null
+                          ? "Selected Time: ${_selectedTime!.format(context)}"
+                          : "No time selected",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
 
-                  // SizedBox(height: 20),
+                  SizedBox(height: 20),
 
-                  // ElevatedButton(
-                  //   onPressed: _pickTime,
-                  //   child: Text("Pick a Time"),
-                  // ),
+                  ElevatedButton(
+                    onPressed: _pickTime,
+                    child: Text("Pick a Time"),
+                  ),
                   SizedBox(height: 15),
                   Container(
                     margin: EdgeInsets.only(left: 10),
@@ -127,11 +127,11 @@ class _DemoState extends State<Demo> {
                       ElevatedButton(onPressed: () {}, child: Text('End'))
                     ],
                   ),
-                  // SizedBox(height: 15),
-                  // TimePickerDialog(
-                  //   initialTime: TimeOfDay.now(),
-                  //   initialEntryMode: TimePickerEntryMode.inputOnly,
-                  // ),
+                  SizedBox(height: 15),
+                  TimePickerDialog(
+                    initialTime: TimeOfDay.now(),
+                    initialEntryMode: TimePickerEntryMode.inputOnly,
+                  ),
                   SizedBox(height: 15),
                   TextFormField(
                     controller: eventNameController,

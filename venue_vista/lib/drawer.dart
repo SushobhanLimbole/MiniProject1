@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:venue_vista/Pages/SignInPage.dart';
-import 'package:venue_vista/Pages/Test.dart';
+//import 'package:venue_vista/Pages/Test.dart';
 import 'package:venue_vista/Pages/Bookings.dart';
 import 'package:venue_vista/Pages/profile.dart';
 import 'package:venue_vista/Pages/report.dart';
@@ -57,13 +57,16 @@ class _AppDrawerState extends State<AppDrawer> {
                       },
                     ),
                   )
-                : CircleAvatar(
-                    radius: 50,
-                    backgroundColor: primaryColor,
-                    child: Text(
-                      'US',
-                      style: TextStyle(fontSize: 25),
-                    ),
+                : InkWell(
+                  onTap: (){Navigator.push(context,MaterialPageRoute(builder: (context)=>ProfileScreen()));},
+                  child: CircleAvatar(
+                      radius: 50,
+                      backgroundColor: primaryColor,
+                      child: Text(
+                        'US',
+                        style: TextStyle(fontSize: 25),
+                      ),
+                  ),
                 ),
           ),
           ListTile(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:venue_vista/Pages/Test.dart';
 import 'package:venue_vista/Pages/report.dart';
 import 'package:venue_vista/constants.dart';
 import 'package:venue_vista/drawer.dart';
@@ -142,7 +143,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => DepartmentBarChart(),
+                      builder: (context) => Demo(),
                     )),
                 child: Text('Test')),
             if (_selectedDay != null)
