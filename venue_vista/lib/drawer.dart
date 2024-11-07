@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:venue_vista/Pages/SignInPage.dart';
+import 'package:venue_vista/Pages/Test.dart';
 import 'package:venue_vista/Pages/Bookings.dart';
 import 'package:venue_vista/Pages/profile.dart';
 import 'package:venue_vista/Pages/report.dart';
@@ -32,7 +34,7 @@ class _AppDrawerState extends State<AppDrawer> {
               ),
             ),
             accountEmail:
-                Text('useremail1236@gmail.com', style: GoogleFonts.poppins(color: secondaryColor)),
+                Text('useremail123@gmail.com', style: GoogleFonts.poppins(color: secondaryColor)),
             currentAccountPicture: userPic != ''
                 ? ClipOval(
                     child: Image.network(
@@ -55,17 +57,12 @@ class _AppDrawerState extends State<AppDrawer> {
                       },
                     ),
                   )
-                : InkWell(
-                  onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>ProfileScreen()));
-                  },
-                  child: CircleAvatar(
-                      radius: 50,
-                      backgroundColor: primaryColor,
-                      child: Text(
-                        'SG',
-                        style: TextStyle(fontSize: 25),
-                      ),
+                : CircleAvatar(
+                    radius: 50,
+                    backgroundColor: primaryColor,
+                    child: Text(
+                      'US',
+                      style: TextStyle(fontSize: 25),
                     ),
                 ),
           ),
@@ -117,7 +114,7 @@ class _AppDrawerState extends State<AppDrawer> {
             title: Text('Help',style: GoogleFonts.poppins(color: secondaryColor,)),
             onTap: () {},
           ),
-          ListTile(
+          ListTile( 
             leading: const Icon(
               Icons.logout,
               color: Colors.red,
@@ -126,9 +123,9 @@ class _AppDrawerState extends State<AppDrawer> {
             onTap: () {
               // Handle navigation
 
-              // Navigator.of(context).pushReplacement(
-              //   MaterialPageRoute(builder: (context) => const LoginScreen()),
-              // );
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => SignInPage()),
+              );
             },
           ),
         ],
