@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:venue_vista/Pages/HomePage.dart';
+import 'package:venue_vista/Pages/SignUpPage.dart';
 
 class SignInPage extends StatefulWidget {
   @override
@@ -15,7 +16,7 @@ class _SignInPageState extends State<SignInPage> {
   final TextEditingController confirmPasswordController =
       TextEditingController();
   String? selectedRole;
-  final List<String> roles = ['Admin', 'Client'];
+  final List<String> roles = ['Admin', 'Faculty'];
   bool _isPasswordVisible = true;
 
   @override
@@ -138,9 +139,6 @@ class _SignInPageState extends State<SignInPage> {
                   },
                   decoration: InputDecoration(
                     labelText: 'Select Role',
-                    labelStyle: GoogleFonts.poppins(),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30)),
                     prefixIcon: const Padding(
                       padding: EdgeInsets.all(5),
                       child: Icon(Icons.person),
@@ -156,11 +154,25 @@ class _SignInPageState extends State<SignInPage> {
                 ),
                 const SizedBox(height: 25.0),
 
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Don't have an account? ",style: GoogleFonts.poppins(
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w500),),
+                    GestureDetector(
+                      onTap: () => Navigator.push(context,MaterialPageRoute(builder: (context) => SignUpPage(),)),
+                      child: Text('Sign Up',style: GoogleFonts.poppins(
+                      color: Colors.red,
+                      fontWeight: FontWeight.w500),))
+                  ],
+                ),
+
+                const SizedBox(height: 25.0),
+
                 // Sign In Button
                 ElevatedButton(
-                  style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.all(
-                          const Color.fromRGBO(243, 193, 202, 1))),
+                  
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       // If the form is valid, print the values
@@ -176,10 +188,7 @@ class _SignInPageState extends State<SignInPage> {
                         ));
                   },
                   child: Text('Sign In',
-                      style: GoogleFonts.notoSans(
-                          color: const Color.fromRGBO(80, 37, 112, 1),
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500)),
+                      ),
                 ),
               ],
             ),

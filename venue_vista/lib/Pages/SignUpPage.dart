@@ -18,7 +18,7 @@ class _SignUpPageState extends State<SignUpPage> {
   String? selectedRole; // This will hold the selected role from the dropdown
   String? selectedDepartment;
 
-  final List<String> roles = ['Admin', 'Client']; // Roles list
+  final List<String> roles = ['Admin', 'Faculty']; // Roles list
   final List<String> departments = [
     'CSE',
     'Mechanical',
@@ -69,9 +69,6 @@ class _SignUpPageState extends State<SignUpPage> {
                   controller: emailController,
                   decoration: InputDecoration(
                     labelText: 'Email',
-                    labelStyle: GoogleFonts.poppins(),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30)),
                     prefixIcon: const Padding(
                       padding: EdgeInsets.all(5),
                       child: Icon(Icons.email),
@@ -97,9 +94,6 @@ class _SignUpPageState extends State<SignUpPage> {
                   obscureText: _isPasswordVisible,
                   decoration: InputDecoration(
                     labelText: 'Password',
-                    labelStyle: GoogleFonts.poppins(),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30)),
                     prefixIcon: const Padding(
                       padding: EdgeInsets.all(5),
                       child: Icon(Icons.password),
@@ -137,9 +131,6 @@ class _SignUpPageState extends State<SignUpPage> {
                   obscureText: _isConfirmPasswordVisible,
                   decoration: InputDecoration(
                     labelText: 'Confirm Password',
-                    labelStyle: GoogleFonts.poppins(),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30)),
                     prefixIcon: const Padding(
                       padding: EdgeInsets.all(5),
                       child: Icon(Icons.password),
@@ -191,9 +182,6 @@ class _SignUpPageState extends State<SignUpPage> {
                   },
                   decoration: InputDecoration(
                     labelText: 'Select Department',
-                    labelStyle: GoogleFonts.poppins(),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30)),
                     prefixIcon: const Padding(
                       padding: EdgeInsets.all(5),
                       child: Icon(Icons.business),
@@ -225,9 +213,6 @@ class _SignUpPageState extends State<SignUpPage> {
                   },
                   decoration: InputDecoration(
                     labelText: 'Select Role',
-                    labelStyle: GoogleFonts.poppins(),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30)),
                     prefixIcon: const Padding(
                       padding: EdgeInsets.all(5),
                       child: Icon(Icons.person),
@@ -245,9 +230,6 @@ class _SignUpPageState extends State<SignUpPage> {
 
                 // Sign Up Button
                 ElevatedButton(
-                  style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.all(
-                          const Color.fromRGBO(243, 193, 202, 1))),
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       // If all validations pass
@@ -257,17 +239,13 @@ class _SignUpPageState extends State<SignUpPage> {
 
                       // Handle successful sign-up logic
                     }
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => SignInPage()),
                     );
                   },
                   child: Text(
                     'Create My Account',
-                    style: GoogleFonts.notoSans(
-                        color: const Color.fromRGBO(80, 37, 112, 1),
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500),
                   ),
                 ),
               ],

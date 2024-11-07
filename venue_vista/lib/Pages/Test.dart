@@ -227,9 +227,9 @@
 //   }
 // }
 
-
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class DepartmentBarChart extends StatelessWidget {
   // Data for department bookings
@@ -275,6 +275,7 @@ class DepartmentBarChart extends StatelessWidget {
         ),
       ),
     );
+    
   }
 
   List<BarChartGroupData> _buildBarGroups() {
