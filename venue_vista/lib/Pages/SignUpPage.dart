@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:venue_vista/Pages/SignInPage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -8,11 +10,14 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  
+  final FirebaseAuth _authService = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>(); // Key for the form
+  final TextEditingController userNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
+  final TextEditingController confirmPasswordController =TextEditingController();
   bool _isPasswordVisible = true;
   bool _isConfirmPasswordVisible = true;
   String? selectedRole; // This will hold the selected role from the dropdown
@@ -26,6 +31,109 @@ class _SignUpPageState extends State<SignUpPage> {
     'ENTC',
     'AIDS'
   ];
+
+  void _trySubmit() async {
+    final isValid = _formKey.currentState?.validate();
+    if (isValid ?? false) {
+      _formKey.currentState?.save();
+
+      // Show loading SnackBar
+      final loadingSnackBar = SnackBar(
+        content: Row(
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(width: 16),
+            Text('Registering user, please wait...'),
+          ],
+        ),
+        duration: Duration(minutes: 1), // Keep it visible for longer duration
+      );
+      ScaffoldMessenger.of(context).showSnackBar(loadingSnackBar);
+
+      try {
+        if (userNameController.text.isNotEmpty) {
+          if (confirmPasswordController.text.isEmpty) {
+            ScaffoldMessenger.of(context)
+                .hideCurrentSnackBar(); // Hide loading SnackBar
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Please confirm your password.')),
+            );
+          } else if (passwordController.text ==
+              confirmPasswordController.text) {
+            UserCredential userCredential =
+                await _authService.createUserWithEmailAndPassword(
+              email: emailController.text,
+              password: passwordController.text,
+            );
+            User? user = userCredential.user;
+
+            if (user != null) {
+              await user.updateDisplayName(userNameController.text);
+
+              // Add user details to Firestore
+              await _firestore.collection('Users').doc(user.uid).set({
+                'userName': userNameController.text,
+                'email': emailController.text,
+                'password': passwordController.text,
+                'role': selectedRole,
+                'department':selectedDepartment,
+              });
+
+              ScaffoldMessenger.of(context)
+                  .hideCurrentSnackBar(); // Hide loading SnackBar
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('User registered successfully')),
+              );
+
+              // Navigate to SignInPage after successful registration
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SignInPage(),
+                ),
+              );
+            }
+          } else {
+            ScaffoldMessenger.of(context)
+                .hideCurrentSnackBar(); // Hide loading SnackBar
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Password mismatch')),
+            );
+          }
+        } else {
+          ScaffoldMessenger.of(context)
+              .hideCurrentSnackBar(); // Hide loading SnackBar
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Please enter your username')),
+          );
+        }
+      } on FirebaseAuthException catch (e) {
+        ScaffoldMessenger.of(context)
+            .hideCurrentSnackBar(); // Hide loading SnackBar
+        String message = 'An error occurred, please check your credentials!';
+        if (e.code == 'email-already-in-use') {
+          message = 'The email address is already in use by another account.';
+        } else if (e.code == 'invalid-email') {
+          message = 'The email address is badly formatted.';
+        } else if (e.code == 'weak-password') {
+          message = 'The password provided is too weak.';
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(message)),
+        );
+      } catch (e) {
+        debugPrint('error = $e');
+        ScaffoldMessenger.of(context)
+            .hideCurrentSnackBar(); // Hide loading SnackBar
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('An unexpected error occurred.'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +172,28 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
 
                 const SizedBox(height: 30.0),
+
+                TextFormField(
+                  controller: userNameController,
+                  decoration: InputDecoration(
+                    labelText: 'Username',
+                    labelStyle: GoogleFonts.poppins(),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30)),
+                    prefixIcon: const Padding(
+                      padding: EdgeInsets.all(5),
+                      child: Icon(Icons.person),
+                    ),
+                  ),
+                  validator: (value) {
+                    // Basic email validation
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your username';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16.0),
                 // Email TextField
                 TextFormField(
                   controller: emailController,
@@ -236,14 +366,8 @@ class _SignUpPageState extends State<SignUpPage> {
                       debugPrint('Email: ${emailController.text}');
                       debugPrint('Password: ${passwordController.text}');
                       debugPrint('Role: $selectedRole');
-
-                      // Handle successful sign-up logic
-                    }
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => SignInPage()),
-                    );
-                  },
+                      _trySubmit();
+                    }},
                   child: Text(
                     'Create My Account',
                   ),

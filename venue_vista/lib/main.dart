@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
-// import 'package:venue_vista/Pages/HomePage.dart';
 import 'package:venue_vista/Pages/SignInPage.dart';
-// import 'package:venue_vista/Pages/SignUpPage.dart';
-// import 'package:venue_vista/Pages/Test.dart';
-// import 'package:venue_vista/Pages/TimePicker.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:venue_vista/constants.dart';
+import 'package:venue_vista/firebase_options.dart';
 
-void main() {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+void main() async {
+ WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 

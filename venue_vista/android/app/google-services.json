@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "904758558916",
+    "firebase_url": "https://venue-vista-c9339-default-rtdb.firebaseio.com",
+    "project_id": "venue-vista-c9339",
+    "storage_bucket": "venue-vista-c9339.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:904758558916:android:b770bcef031eec65034991",
+        "android_client_info": {
+          "package_name": "com.example.venue_vista"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAHJwQurgef7TTUwudiFhIF3Q95RpZhev0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

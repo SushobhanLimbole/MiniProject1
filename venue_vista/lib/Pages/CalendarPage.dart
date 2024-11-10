@@ -2,11 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:venue_vista/Pages/Test.dart';
-import 'package:venue_vista/Pages/report.dart';
 import 'package:venue_vista/constants.dart';
 import 'package:venue_vista/drawer.dart';
 
 class CalendarPage extends StatefulWidget {
+  final String uid;
+  final bool isAdmin;
+  final String userName;
+  final String userEmail;
+  CalendarPage(
+      {required this.uid, required this.isAdmin, required this.userName, required this.userEmail});
   @override
   _CalendarPageState createState() => _CalendarPageState();
 }
@@ -25,17 +30,19 @@ class _CalendarPageState extends State<CalendarPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,  // Add this line to associate the key with the Scaffold
+      key: _scaffoldKey, // Add this line to associate the key with the Scaffold
       appBar: AppBar(
         centerTitle: true,
-        leading: IconButton(onPressed: () => Navigator.pop(context), icon: Icon(Icons.chevron_left)),
+        leading: IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: Icon(Icons.chevron_left)),
         backgroundColor: Color.fromRGBO(243, 193, 202, 1),
         title: Text(
           'Central Auditorium',
           style: GoogleFonts.poppins(),
         ),
       ),
-      drawer: AppDrawer(),
+      drawer: AppDrawer(uid: widget.uid,isAdmin: widget.isAdmin,userEmail: widget.userEmail,userName: widget.userName,),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -48,7 +55,7 @@ class _CalendarPageState extends State<CalendarPage> {
               onDaySelected: (selectedDay, focusedDay) {
                 setState(() {
                   _selectedDay = selectedDay;
-                  _focusedDay = focusedDay; 
+                  _focusedDay = focusedDay;
                 });
               },
               eventLoader: (day) {
@@ -143,13 +150,18 @@ class _CalendarPageState extends State<CalendarPage> {
                 onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => Demo(),
+                      builder: (context) => Demo(
+                        uid: widget.uid,
+                        isAdmin: widget.isAdmin,
+                        userName: widget.userName,
+                        userEmail: widget.userEmail,
+                      ),
                     )),
                 child: Text('Test')),
             if (_selectedDay != null)
               ..._events[_selectedDay!.toUtc()]?.map((event) => Container(
                         child: Text(event),
-                      )) ?? 
+                      )) ??
                   [ListTile(title: Text('No Events'))]
           ],
         ),

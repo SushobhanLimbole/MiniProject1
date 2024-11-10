@@ -3,6 +3,9 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 class ProfileScreen extends StatefulWidget {
+    final String userName; 
+  final String userEmail;
+  const ProfileScreen({required this.userName,required this.userEmail});
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
@@ -11,7 +14,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final ImagePicker _picker = ImagePicker();
   XFile? _image;
   final TextEditingController _usernameController =
-      TextEditingController(text: 'John Doe');
+      TextEditingController(text: '');
   bool _isEditing = false;
 
   Future<void> _pickImage() async {
