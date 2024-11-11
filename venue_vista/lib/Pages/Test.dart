@@ -100,8 +100,8 @@ class _DemoState extends State<Demo> {
       await _firestore
           .collection('Users')
           .doc(widget.uid)
-          .collection('Events')
-          .add({
+          .collection('Events').doc(widget.userEmail)
+          .set({
         "eventName": eventNameController.text.trim(),
         "startDate":
             _selectedStartDate != null ? formatDate(_selectedStartDate!) : '',

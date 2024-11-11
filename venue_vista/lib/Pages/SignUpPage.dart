@@ -71,7 +71,7 @@ class _SignUpPageState extends State<SignUpPage> {
               await user.updateDisplayName(userNameController.text);
 
               // Add user details to Firestore
-              await _firestore.collection('Users').doc(user.uid).set({
+              await _firestore.collection('Users').doc(emailController.text).set({
                 'userName': userNameController.text,
                 'email': emailController.text,
                 'password': passwordController.text,
