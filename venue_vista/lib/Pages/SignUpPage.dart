@@ -267,7 +267,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                     suffixIcon: GestureDetector(
                       onTap: () => setState(() {
-                        _isPasswordVisible = !_isConfirmPasswordVisible;
+                        _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
                       }),
                       child: Padding(
                         padding: const EdgeInsets.all(5),

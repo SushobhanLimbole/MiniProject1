@@ -47,12 +47,12 @@ class _DemoState extends State<Demo> {
       } else {
         _selectedEndDate = picked;
         debugPrint("Selected End Date: ${formatDate(_selectedEndDate!)}");
-        eventendTime = formatDate(_selectedEndDate!);
+        eventendDate = formatDate(_selectedEndDate!);
       }
     }
   }
 
-  var eventstartTime, eventendTime, eventstartDate, eventendDate;
+  String? eventstartTime, eventendTime, eventstartDate, eventendDate;
 // Time picker function
   Future<void> _pickTime(BuildContext context, bool isStartTime) async {
     final TimeOfDay? picked = await showTimePicker(
@@ -91,32 +91,33 @@ class _DemoState extends State<Demo> {
       required String lastTime,
       required String speaker,
       required String attendee,
-      bool isApproved = false,
-      required String nowDate,
+      required Timestamp nowDate,
       String? collab,
       required String description}) async {
     try {
       debugPrint(widget.uid);
       await _firestore
           .collection('Users')
-          .doc(widget.uid)
-          .collection('Events').doc(widget.userEmail)
+          .doc(widget.userEmail)
+          .collection('Events')
+          .doc(eventName)
           .set({
         "eventName": eventNameController.text.trim(),
-        "startDate":
-            _selectedStartDate != null ? formatDate(_selectedStartDate!) : '',
-        "lastDate":
-            _selectedEndDate != null ? formatDate(_selectedEndDate!) : '',
-        "startTime":
-            _selectedStartTime != null ? formatTime(_selectedStartTime!) : '',
-        "lastTime":
-            _selectedEndTime != null ? formatTime(_selectedEndTime!) : '',
+        "startDate":eventstartDate,
+          //  _selectedStartDate != null ? DateTime(_selectedStartDate!.day) : Timestamp.fromDate(eventstartDate),
+        "lastDate":eventendDate,
+          // _selectedEndDate != null ? DateTime(_selectedEndDate!.day) : Timestamp.fromDate(eventendDate),
+        "startTime":startTime,
+          //  _selectedStartTime != null ? DateTime(_selectedStartTime!.hour) : Timestamp.fromDate(eventendDate),
+        "lastTime": lastTime,
+          //  _selectedEndTime != null ? DateTime(_selectedEndTime!.hour) : Timestamp.fromDate(eventendDate),
         "speaker": eventSpeakerController.text.trim(),
         "attendee": eventAttendeeController.text.trim(),
         "description": eventDesc.text.trim(),
         "collab": eventCollabController.text.trim(),
         "isApproved":false,
-        "nowDate":formatDate(DateTime.now()),
+        "isPending":true,
+        "nowDate":Timestamp.fromDate(DateTime.now()),
       });
       debugPrint("Event added successfully");
     } catch (e) {
@@ -124,7 +125,7 @@ class _DemoState extends State<Demo> {
     }
   }
 
-  void _submitEvent() {
+  void _submitEvent() async {
     if (eventNameController.text.isEmpty ||
         eventSpeakerController.text.isEmpty ||
         eventAttendeeController.text.isEmpty ||
@@ -138,18 +139,17 @@ class _DemoState extends State<Demo> {
       );
     }
     debugPrint("before addTopic method");
-    addTopic(
+    await addTopic(
       eventName: eventNameController.text.trim(),
-      startDate: "$eventstartDate",
-      lastDate: "$eventendDate",
-      startTime: "$_firestore",
-      lastTime: "$eventendDate",
+      startDate: eventstartDate! ,
+      lastDate: eventendDate!,
+      startTime: eventstartTime!,
+      lastTime: eventendTime!,
       speaker: eventSpeakerController.text.trim(),
       attendee: eventAttendeeController.text.trim(),
       description: eventDesc.text.trim(),
       collab: eventCollabController.text.trim(),
-      isApproved:false,
-      nowDate:"${formatDate(DateTime.now())}",
+      nowDate:Timestamp.fromDate(DateTime.now()),
     );
     debugPrint("after addTopic method");
   }
@@ -208,7 +208,7 @@ class _DemoState extends State<Demo> {
                       ),
                     ),
                     SizedBox(height: 15),
-
+          
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -240,7 +240,7 @@ class _DemoState extends State<Demo> {
                       ],
                     ),
                     SizedBox(height: 15),
-
+          
                     // Start Time Picker Button
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -273,7 +273,7 @@ class _DemoState extends State<Demo> {
                       ],
                     ),
                     SizedBox(height: 15),
-
+          
                     // End Date Picker Button
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -306,7 +306,7 @@ class _DemoState extends State<Demo> {
                       ],
                     ),
                     SizedBox(height: 15),
-
+          
                     // End Time Picker Button
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -339,7 +339,7 @@ class _DemoState extends State<Demo> {
                       ],
                     ),
                     SizedBox(height: 30),
-
+          
                     // Display selected date and time
                     // if (_selectedStartDate != null &&
                     //     _selectedStartTime != null)
@@ -352,7 +352,7 @@ class _DemoState extends State<Demo> {
                     //     "Event ends on ${formatDate(_selectedEndDate!)} at ${formatTime(_selectedEndTime!)}",
                     //     style: GoogleFonts.poppins(fontSize: 16),
                     //   ),
-
+          
                     // SizedBox(height: 20),
                     // Text(
                     //   _selectedStartDate != null && _selectedStartTime != null
@@ -375,15 +375,15 @@ class _DemoState extends State<Demo> {
                     //                   fontSize: 20, fontWeight: FontWeight.w500),
                     //             ),
                     //           ),
-
+          
                     //           Row(
                     //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     //             children: [
                     //               ElevatedButton(onPressed: () {
-
+          
                     //               }, child: Text('Start')),
                     //               ElevatedButton(onPressed: () {
-
+          
                     //               }, child: Text('End'))
                     //             ],
                     //           ),
@@ -474,6 +474,7 @@ class _DemoState extends State<Demo> {
                         child: Text("Send Event Request"),
                       ),
                     ),
+                    SizedBox(height: 20,)
                   ],
                 ),
               ),

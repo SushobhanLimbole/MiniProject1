@@ -329,6 +329,7 @@ class _AdminAuditoriumScreenState extends State<AdminAuditoriumScreen> {
                       itemCount: users.length,
                       itemBuilder: (context, index) {
                         var user = users[index];
+                        var userName = user['userName'];
                         var department = user['department'];
                         return StreamBuilder(
                           stream:
@@ -378,7 +379,7 @@ class _AdminAuditoriumScreenState extends State<AdminAuditoriumScreen> {
                                                     style: TextStyle(
                                                         fontSize: 16,
                                                         color: secondaryColor)),
-                                                Text('From: XYZ',
+                                                Text('From: $userName',
                                                     style: TextStyle(
                                                         fontSize: 16,
                                                         color: secondaryColor)),
