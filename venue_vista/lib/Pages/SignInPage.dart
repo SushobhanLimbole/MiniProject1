@@ -99,7 +99,7 @@ class _SignInPageState extends State<SignInPage> {
                 MaterialPageRoute(
                   builder: (context) => HomePage(
                     uid: "$userId",
-                    isAdmin: userRole == 'Faculty',
+                    isAdmin: userRole == 'Admin',
                     userName: userDoc['userName'],
                     userEmail: emailController.text.trim(),
                   ),

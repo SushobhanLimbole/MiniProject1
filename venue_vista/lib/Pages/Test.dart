@@ -91,6 +91,8 @@ class _DemoState extends State<Demo> {
       required String lastTime,
       required String speaker,
       required String attendee,
+      bool isApproved = false,
+      required String nowDate,
       String? collab,
       required String description}) async {
     try {
@@ -113,6 +115,8 @@ class _DemoState extends State<Demo> {
         "attendee": eventAttendeeController.text.trim(),
         "description": eventDesc.text.trim(),
         "collab": eventCollabController.text.trim(),
+        "isApproved":false,
+        "nowDate":formatDate(DateTime.now()),
       });
       debugPrint("Event added successfully");
     } catch (e) {
@@ -144,6 +148,8 @@ class _DemoState extends State<Demo> {
       attendee: eventAttendeeController.text.trim(),
       description: eventDesc.text.trim(),
       collab: eventCollabController.text.trim(),
+      isApproved:false,
+      nowDate:"${formatDate(DateTime.now())}",
     );
     debugPrint("after addTopic method");
   }
@@ -461,7 +467,10 @@ class _DemoState extends State<Demo> {
                     ),
                     Center(
                       child: ElevatedButton(
-                        onPressed: _submitEvent,
+                        onPressed: (){
+                          _submitEvent();
+                          Navigator.pop(context);
+                        },
                         child: Text("Send Event Request"),
                       ),
                     ),
@@ -489,7 +498,7 @@ class _DemoState extends State<Demo> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                '   My Bookings',
+                '   My Bookings Requests',
                 style: TextStyle(
                   color: secondaryColor,
                   fontSize: 20,
@@ -517,7 +526,7 @@ class _DemoState extends State<Demo> {
                         itemBuilder: (context, index) {
                           var event = events[index];
                           return Padding(
-                            padding: const EdgeInsets.all(10.0),
+                            padding: const EdgeInsets.all(5.0),
                             child: Card(
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15.0),

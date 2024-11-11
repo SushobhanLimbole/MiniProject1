@@ -17,7 +17,7 @@ class DepartmentBarChart extends StatelessWidget {
       final department = userDoc['department'] as String;
 
       // Get the count of documents in the 'Events' subcollection
-      final eventsSnapshot = await userDoc.reference.collection('Events').get();
+      final eventsSnapshot = await userDoc.reference.collection('Events').where("isApproved",isEqualTo: true).get();
       final eventCount = eventsSnapshot.docs.length;
 
       // Accumulate event counts for each department

@@ -267,13 +267,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:venue_vista/constants.dart';
 
-class AuditoriumScreen extends StatefulWidget {
+class AdminAuditoriumScreen extends StatefulWidget {
   final bool isAdmin;
   final String uid;
   final String userName;
   final String userEmail;
 
-  AuditoriumScreen({
+  AdminAuditoriumScreen({
     required this.uid,
     required this.userName,
     required this.userEmail,
@@ -281,10 +281,10 @@ class AuditoriumScreen extends StatefulWidget {
   });
 
   @override
-  State<AuditoriumScreen> createState() => _AuditoriumScreenState();
+  State<AdminAuditoriumScreen> createState() => _AdminAuditoriumScreenState();
 }
 
-class _AuditoriumScreenState extends State<AuditoriumScreen> {
+class _AdminAuditoriumScreenState extends State<AdminAuditoriumScreen> {
   final DateTime requestTime = DateTime(2024, 10, 25, 14, 30);
 
   @override
@@ -307,7 +307,7 @@ class _AuditoriumScreenState extends State<AuditoriumScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'My Requests',
+              'Pending Requests',
               style: TextStyle(
                 color: secondaryColor,
                 fontSize: 20,
@@ -317,7 +317,7 @@ class _AuditoriumScreenState extends State<AuditoriumScreen> {
             SizedBox(height: 20),
             StreamBuilder(
               stream:
-                  FirebaseFirestore.instance.collection('Users').where("email",isEqualTo:widget.userEmail).snapshots(),
+                  FirebaseFirestore.instance.collection('Users').snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(child: CircularProgressIndicator());
@@ -378,9 +378,9 @@ class _AuditoriumScreenState extends State<AuditoriumScreen> {
                                                     style: TextStyle(
                                                         fontSize: 16,
                                                         color: secondaryColor)),
-                                                Text('From: ${event["startDate"]} to ${event["lastDate"]}',
+                                                Text('From: XYZ',
                                                     style: TextStyle(
-                                                        fontSize: 12,
+                                                        fontSize: 16,
                                                         color: secondaryColor)),
                                                 Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
                                                   children: [
@@ -515,8 +515,42 @@ void showBottomSheet(
                           label: 'Time Slot',
                           value:
                               '${event['startTime']} - ${event['lastTime']}'),
-                      SizedBox(height: 10),
-
+                      SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              onAccept(event);
+                              Navigator.pop(context);
+                            },
+                            child: Text('ACCEPT'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 10),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                            ),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              onReject(event);
+                              Navigator.pop(context);
+                            },
+                            child: Text('REJECT'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 10),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),

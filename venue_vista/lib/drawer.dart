@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:venue_vista/Pages/Request.dart';
 import 'package:venue_vista/Pages/SignInPage.dart';
 //import 'package:venue_vista/Pages/Bookings.dart';
 import 'package:venue_vista/Pages/Test.dart';
 import 'package:venue_vista/Pages/profile.dart';
 import 'package:venue_vista/Pages/report.dart';
-import 'package:venue_vista/Pages/request.dart';
+import 'package:venue_vista/Pages/admin_request.dart';
 import 'package:venue_vista/constants.dart';
 
 class AppDrawer extends StatefulWidget {
@@ -138,7 +139,15 @@ class _AppDrawerState extends State<AppDrawer> {
                   color: secondaryColor,
                 )),
             onTap: () => Navigator.push(context,
-                MaterialPageRoute(builder: (context) => AuditoriumScreen())),
+                MaterialPageRoute(builder: (context) =>widget.isAdmin?AdminAuditoriumScreen(
+                        uid:widget.uid,
+                        isAdmin: widget.isAdmin,
+                        userName: widget.userName,
+                        userEmail: widget.userEmail) :AuditoriumScreen(
+                        uid:widget.uid,
+                        isAdmin: widget.isAdmin,
+                        userName: widget.userName,
+                        userEmail: widget.userEmail))),
           ),
           // const Divider(),
           ListTile(
