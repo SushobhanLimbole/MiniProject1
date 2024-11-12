@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:venue_vista/Components/AuditoriumCard.dart';
+import 'package:venue_vista/constants.dart';
 import 'package:venue_vista/drawer.dart';
 
 class HomePage extends StatefulWidget {
@@ -59,6 +60,16 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(items:[BottomNavigationBarItem(icon: Icon(Icons.home,color: primaryColor,),activeIcon: Container(
+        //height: 20,width: 30,
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
+        child: Icon(Icons.home),
+      ),label: "Home",backgroundColor: secondaryColor
+      ),
+            BottomNavigationBarItem(icon: Icon(Icons.calendar_month,color: primaryColor,),label: ""),
+            BottomNavigationBarItem(icon: Icon(Icons.add,color: primaryColor,),label:""),
+            BottomNavigationBarItem(icon: Icon(Icons.account_circle_outlined,color: primaryColor,),label: "") ],
       ),
     );
   }

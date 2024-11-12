@@ -30,7 +30,8 @@ class _DemoState extends State<Demo> {
   DateTime? _selectedEndDate;
   TimeOfDay? _selectedStartTime;
   TimeOfDay? _selectedEndTime;
-
+  String? selectedslot;
+  final List<String> slots = ['Morning Slot', 'Evening Slot', 'Full Day'];
   // Date picker function
   Future<void> _selectDate(BuildContext context, bool isStartDate) async {
     final DateTime? picked = await showDatePicker(
@@ -87,11 +88,12 @@ class _DemoState extends State<Demo> {
       {required String eventName,
       required String startDate,
       required String lastDate,
-      required String startTime,
-      required String lastTime,
+      // required String startTime,
+      // required String lastTime,
       required String speaker,
       required String attendee,
       required Timestamp nowDate,
+      required String slot,
       String? collab,
       required String description}) async {
     try {
@@ -103,21 +105,22 @@ class _DemoState extends State<Demo> {
           .doc(eventName)
           .set({
         "eventName": eventNameController.text.trim(),
-        "startDate":eventstartDate,
-          //  _selectedStartDate != null ? DateTime(_selectedStartDate!.day) : Timestamp.fromDate(eventstartDate),
-        "lastDate":eventendDate,
-          // _selectedEndDate != null ? DateTime(_selectedEndDate!.day) : Timestamp.fromDate(eventendDate),
-        "startTime":startTime,
-          //  _selectedStartTime != null ? DateTime(_selectedStartTime!.hour) : Timestamp.fromDate(eventendDate),
-        "lastTime": lastTime,
-          //  _selectedEndTime != null ? DateTime(_selectedEndTime!.hour) : Timestamp.fromDate(eventendDate),
+        "startDate": eventstartDate,
+        //  _selectedStartDate != null ? DateTime(_selectedStartDate!.day) : Timestamp.fromDate(eventstartDate),
+        "lastDate": eventendDate,
+        // _selectedEndDate != null ? DateTime(_selectedEndDate!.day) : Timestamp.fromDate(eventendDate),
+        //"startTime": startTime,
+        //  _selectedStartTime != null ? DateTime(_selectedStartTime!.hour) : Timestamp.fromDate(eventendDate),
+        //"lastTime": lastTime,
+        //  _selectedEndTime != null ? DateTime(_selectedEndTime!.hour) : Timestamp.fromDate(eventendDate),
         "speaker": eventSpeakerController.text.trim(),
         "attendee": eventAttendeeController.text.trim(),
         "description": eventDesc.text.trim(),
         "collab": eventCollabController.text.trim(),
-        "isApproved":false,
-        "isPending":true,
-        "nowDate":Timestamp.fromDate(DateTime.now()),
+        "isApproved": false,
+        "isPending": true,
+        "nowDate": Timestamp.fromDate(DateTime.now()),
+        "slot":selectedslot,
       });
       debugPrint("Event added successfully");
     } catch (e) {
@@ -141,15 +144,16 @@ class _DemoState extends State<Demo> {
     debugPrint("before addTopic method");
     await addTopic(
       eventName: eventNameController.text.trim(),
-      startDate: eventstartDate! ,
+      startDate: eventstartDate!,
       lastDate: eventendDate!,
-      startTime: eventstartTime!,
-      lastTime: eventendTime!,
+      // startTime: eventstartTime!,
+      // lastTime: eventendTime!,
       speaker: eventSpeakerController.text.trim(),
       attendee: eventAttendeeController.text.trim(),
       description: eventDesc.text.trim(),
       collab: eventCollabController.text.trim(),
-      nowDate:Timestamp.fromDate(DateTime.now()),
+      nowDate: Timestamp.fromDate(DateTime.now()),
+      slot: selectedslot!,
     );
     debugPrint("after addTopic method");
   }
@@ -208,7 +212,7 @@ class _DemoState extends State<Demo> {
                       ),
                     ),
                     SizedBox(height: 15),
-          
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -240,41 +244,42 @@ class _DemoState extends State<Demo> {
                       ],
                     ),
                     SizedBox(height: 15),
-          
+
                     // Start Time Picker Button
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {});
-                            _pickTime(context, true);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 15, horizontal: 20),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            backgroundColor: Colors.teal,
-                          ),
-                          child: Container(
-                            width: 200,
-                            child: Center(
-                              child: Text(
-                                _selectedStartTime != null
-                                    ? "Start Time: ${formatTime(_selectedStartTime!)}"
-                                    : "Pick a Start Time",
-                                style: GoogleFonts.poppins(
-                                    fontSize: 16, color: Colors.white),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 15),
-          
-                    // End Date Picker Button
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    //   children: [
+                    //     ElevatedButton(
+                    //       onPressed: () {
+                    //         setState(() {});
+                    //         _pickTime(context, true);
+                    //       },
+                    //       style: ElevatedButton.styleFrom(
+                    //         padding: EdgeInsets.symmetric(
+                    //             vertical: 15, horizontal: 20),
+                    //         shape: RoundedRectangleBorder(
+                    //             borderRadius: BorderRadius.circular(10)),
+                    //         backgroundColor: Colors.teal,
+                    //       ),
+                    //       child: Container(
+                    //         width: 200,
+                    //         child: Center(
+                    //           child: Text(
+                    //             _selectedStartTime != null
+                    //                 ? "Start Time: ${formatTime(_selectedStartTime!)}"
+                    //                 : "Pick a Start Time",
+                    //             style: GoogleFonts.poppins(
+                    //                 fontSize: 16, color: Colors.white),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
+                    // SizedBox(height: 15),
+
+                    // // End Date Picker Button
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -306,40 +311,69 @@ class _DemoState extends State<Demo> {
                       ],
                     ),
                     SizedBox(height: 15),
-          
-                    // End Time Picker Button
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {});
-                            _pickTime(context, false);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 15, horizontal: 20),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            backgroundColor: Colors.teal,
-                          ),
-                          child: Container(
-                            width: 200,
-                            child: Center(
-                              child: Text(
-                                _selectedEndTime != null
-                                    ? "End Time: ${formatTime(_selectedEndTime!)}"
-                                    : "Pick an End Time",
-                                style: GoogleFonts.poppins(
-                                    fontSize: 16, color: Colors.white),
-                              ),
-                            ),
-                          ),
+
+                    // // End Time Picker Button
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    //   children: [
+                    //     ElevatedButton(
+                    //       onPressed: () {
+                    //         setState(() {});
+                    //         _pickTime(context, false);
+                    //       },
+                    //       style: ElevatedButton.styleFrom(
+                    //         padding: EdgeInsets.symmetric(
+                    //             vertical: 15, horizontal: 20),
+                    //         shape: RoundedRectangleBorder(
+                    //             borderRadius: BorderRadius.circular(10)),
+                    //         backgroundColor: Colors.teal,
+                    //       ),
+                    //       child: Container(
+                    //         width: 200,
+                    //         child: Center(
+                    //           child: Text(
+                    //             _selectedEndTime != null
+                    //                 ? "End Time: ${formatTime(_selectedEndTime!)}"
+                    //                 : "Pick an End Time",
+                    //             style: GoogleFonts.poppins(
+                    //                 fontSize: 16, color: Colors.white),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
+                    // SizedBox(height: 30),
+                    DropdownButtonFormField<String>(
+                      value: selectedslot,
+                      items: slots.map((dept) {
+                        return DropdownMenuItem<String>(
+                          value: dept,
+                          child: Text(dept),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          selectedslot = value;
+                        });
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'Select Slots',
+                        prefixIcon: const Padding(
+                          padding: EdgeInsets.all(5),
+                          child: Icon(Icons.business),
                         ),
-                      ],
+                      ),
+                      validator: (value) {
+                        // Validate if a slot is selected
+                        if (value == null) {
+                          return 'Please select a Slot';
+                        }
+                        return null;
+                      },
                     ),
-                    SizedBox(height: 30),
-          
+                    const SizedBox(height: 16),
+
                     // Display selected date and time
                     // if (_selectedStartDate != null &&
                     //     _selectedStartTime != null)
@@ -352,7 +386,7 @@ class _DemoState extends State<Demo> {
                     //     "Event ends on ${formatDate(_selectedEndDate!)} at ${formatTime(_selectedEndTime!)}",
                     //     style: GoogleFonts.poppins(fontSize: 16),
                     //   ),
-          
+
                     // SizedBox(height: 20),
                     // Text(
                     //   _selectedStartDate != null && _selectedStartTime != null
@@ -375,24 +409,24 @@ class _DemoState extends State<Demo> {
                     //                   fontSize: 20, fontWeight: FontWeight.w500),
                     //             ),
                     //           ),
-          
+
                     //           Row(
                     //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     //             children: [
                     //               ElevatedButton(onPressed: () {
-          
+
                     //               }, child: Text('Start')),
                     //               ElevatedButton(onPressed: () {
-          
+
                     //               }, child: Text('End'))
                     //             ],
                     //           ),
-                    SizedBox(height: 15),
+                    //SizedBox(height: 15),
                     // TimePickerDialog(
                     //   initialTime: TimeOfDay.now(),
                     //   initialEntryMode: TimePickerEntryMode.inputOnly,
                     // ),
-                    SizedBox(height: 15),
+                    //SizedBox(height: 15),
                     TextFormField(
                       controller: eventSpeakerController,
                       decoration: InputDecoration(
@@ -467,14 +501,16 @@ class _DemoState extends State<Demo> {
                     ),
                     Center(
                       child: ElevatedButton(
-                        onPressed: (){
+                        onPressed: () {
                           _submitEvent();
                           Navigator.pop(context);
                         },
                         child: Text("Send Event Request"),
                       ),
                     ),
-                    SizedBox(height: 20,)
+                    SizedBox(
+                      height: 20,
+                    )
                   ],
                 ),
               ),
@@ -494,7 +530,9 @@ class _DemoState extends State<Demo> {
       ),
       body: Column(
         children: [
-          SizedBox(height: 5,),
+          SizedBox(
+            height: 5,
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:venue_vista/FAQsPage.dart';
+import 'package:venue_vista/HelpPage.dart';
 import 'package:venue_vista/Pages/Request.dart';
 import 'package:venue_vista/Pages/SignInPage.dart';
 //import 'package:venue_vista/Pages/Bookings.dart';
@@ -159,7 +161,7 @@ class _AppDrawerState extends State<AppDrawer> {
                 style: GoogleFonts.poppins(
                   color: secondaryColor,
                 )),
-            onTap: () {},
+            onTap: ()=>Navigator.push(context,MaterialPageRoute(builder: (context)=>FAQsPage())),
           ),
           ListTile(
             leading: const Icon(
@@ -170,7 +172,7 @@ class _AppDrawerState extends State<AppDrawer> {
                 style: GoogleFonts.poppins(
                   color: secondaryColor,
                 )),
-            onTap: () {},
+            onTap: ()=>Navigator.push(context,MaterialPageRoute(builder: (context)=>HelpPage())),
           ),
           ListTile(
             leading: const Icon(
