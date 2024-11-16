@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:venue_vista/Components/BottomNavigationBar.dart';
 import 'dart:io';
 
 class ProfileScreen extends StatefulWidget {
-    final String userName; 
+  final String userName; 
+  final String uid;
   final String userEmail;
-  const ProfileScreen({required this.userName,required this.userEmail});
+  final bool isAdmin;
+  const ProfileScreen({required this.userName,required this.userEmail,required this.uid,required this.isAdmin});
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
@@ -112,6 +115,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
       ),
+      bottomNavigationBar: BottomNavigatorBar(index: 3, uid:widget.uid, isAdmin:true, userEmail: widget.userEmail, userName: widget.userName)
     );
   }
 }

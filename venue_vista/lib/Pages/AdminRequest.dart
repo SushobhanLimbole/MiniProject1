@@ -2,13 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:venue_vista/Components/Constants.dart';
 
-class Request extends StatefulWidget {
+class AdminRequest extends StatefulWidget {
   final bool isAdmin;
   final String uid;
   final String userName;
   final String userEmail;
 
-  Request({
+  AdminRequest({
     required this.uid,
     required this.userName,
     required this.userEmail,
@@ -16,29 +16,28 @@ class Request extends StatefulWidget {
   });
 
   @override
-  State<Request> createState() => _AuditoriumScreenState();
+  State<AdminRequest> createState() => _AdminAuditoriumScreenState();
 }
 
-class _AuditoriumScreenState extends State<Request> {
-
+class _AdminAuditoriumScreenState extends State<AdminRequest> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Pending Requests',
+          'Requests Verification',
           style: TextStyle(color: secondaryColor),
         ),
         centerTitle: true,
         backgroundColor: primaryColor,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.only(left: 10.0,right: 10,top: 5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Pending Requests',
+              'All Requests',
               style: TextStyle(
                 color: secondaryColor,
                 fontSize: 20,
@@ -48,7 +47,7 @@ class _AuditoriumScreenState extends State<Request> {
             SizedBox(height: 5),
             StreamBuilder(
               stream:
-                  FirebaseFirestore.instance.collection('Users').where("email",isEqualTo:widget.userEmail).snapshots(),
+                  FirebaseFirestore.instance.collection('Users').snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(child: CircularProgressIndicator());
@@ -60,24 +59,26 @@ class _AuditoriumScreenState extends State<Request> {
                       itemCount: users.length,
                       itemBuilder: (context, index) {
                         var user = users[index];
+                        var userName = user['userName'];
                         var department = user['department'];
                         return StreamBuilder(
                           stream:
-                              user.reference.collection('Events').where("isApproved",isEqualTo: false).snapshots(),
+                              user.reference.collection('Events').snapshots(),
                           builder: (context,
                               AsyncSnapshot<QuerySnapshot> eventSnapshot) {
-                            if (eventSnapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return Center(child: CircularProgressIndicator());
-                            }
+                            // if (eventSnapshot.connectionState ==
+                            //     ConnectionState.waiting) {
+                            //   return Center(child: CircularProgressIndicator());
+                            // }
                             if (eventSnapshot.hasData &&
                                 eventSnapshot.data!.docs.isNotEmpty) {
                               final events = eventSnapshot.data!.docs;
                               return Column(
                                 children: events.map((event) {
-                                  Timestamp timestamp=event['nowDate'];
+                                  Timestamp timestamp = event['nowDate'];
                                   DateTime requestTime = timestamp.toDate();
-                                  var formatedDate=formatDuration(DateTime.now().difference(requestTime));
+                                  var formatedDate = formatDuration(
+                                      DateTime.now().difference(requestTime));
                                   return Card(
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(15.0),
@@ -112,11 +113,14 @@ class _AuditoriumScreenState extends State<Request> {
                                                     style: TextStyle(
                                                         fontSize: 16,
                                                         color: secondaryColor)),
-                                                Text('From: ${event["startDate"]} to ${event["lastDate"]}',
+                                                Text('From: $userName',
                                                     style: TextStyle(
-                                                        fontSize: 12,
+                                                        fontSize: 16,
                                                         color: secondaryColor)),
-                                                Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceAround,
                                                   children: [
                                                     Text(
                                                         'Requested ${formatedDate} ago',
@@ -124,15 +128,17 @@ class _AuditoriumScreenState extends State<Request> {
                                                             fontSize: 12,
                                                             color:
                                                                 Colors.grey)),
-                                                    
                                                     Padding(
-                                                      padding: const EdgeInsets.only(left:5.0),
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 5.0),
                                                       child: event['isApproved']
                                                           ? Text(
                                                               "Approved",
                                                               style: TextStyle(
+                                                                  fontSize: 12,
                                                                   color: Colors
-                                                                      .green,fontSize: 12,
+                                                                      .green,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .bold),
@@ -140,9 +146,9 @@ class _AuditoriumScreenState extends State<Request> {
                                                           : Text(
                                                               "Not Approved",
                                                               style: TextStyle(
-                                                                fontSize: 12,
-                                                                  color:
-                                                                      Colors.red,
+                                                                  fontSize: 12,
+                                                                  color: Colors
+                                                                      .red,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .bold),
@@ -190,12 +196,13 @@ class _AuditoriumScreenState extends State<Request> {
 }
 
 Future<void> onAccept(DocumentSnapshot event) async {
+  event['isApproved']?
+  await event.reference.update({'isApproved': false}):
   await event.reference.update({'isApproved': true});
-  print("Event '${event['eventName']}' has been accepted.");
 }
 
 Future<void> onReject(DocumentSnapshot event) async {
-  await event.reference.update({'isApproved': false});
+  await event.reference.delete();
   print("Event '${event['eventName']}' has been rejected.");
 }
 
@@ -210,7 +217,6 @@ void showBottomSheet(
         widthFactor: 1.0,
         child: Container(
           padding: const EdgeInsets.all(16.0),
-          width: 200,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
@@ -230,7 +236,7 @@ void showBottomSheet(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 20,width: 350,),
+                SizedBox(height: 20),
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.grey[200],
@@ -247,9 +253,44 @@ void showBottomSheet(
                       DetailRow(label: 'Details', value: event['description']),
                       DetailRow(label: 'Speaker', value: event['speaker']),
                       DetailRow(label: 'Attendees', value: event['attendee']),
-                      DetailRow(label: 'Time Slot', value:'${event['slot']}'),
-                      SizedBox(height: 10),
-
+                      DetailRow(label: 'Time Slot', value: '${event['slot']}'),
+                      SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              onAccept(event);
+                              Navigator.pop(context);
+                            },
+                            child: event['isApproved']?Text('ACCEPTED'):Text('ACCEPT'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: event['isApproved']? Colors.white:Colors.green,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 10),
+                              shape: RoundedRectangleBorder(
+                                side: event['isApproved']? BorderSide(color: Colors.green):BorderSide(color: Colors.white),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                            ),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              onReject(event);
+                              Navigator.pop(context);
+                            },
+                            child: Text('REJECT'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 10),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),

@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:venue_vista/FAQsPage.dart';
-import 'package:venue_vista/HelpPage.dart';
+import 'package:venue_vista/Pages/FAQsPage.dart';
+import 'package:venue_vista/Pages/HelpPage.dart';
 import 'package:venue_vista/Pages/Request.dart';
 import 'package:venue_vista/Pages/SignInPage.dart';
-//import 'package:venue_vista/Pages/Bookings.dart';
-import 'package:venue_vista/Pages/Test.dart';
-import 'package:venue_vista/Pages/profile.dart';
-import 'package:venue_vista/Pages/report.dart';
-import 'package:venue_vista/Pages/admin_request.dart';
-import 'package:venue_vista/constants.dart';
+import 'package:venue_vista/Pages/MyRequests.dart';
+import 'package:venue_vista/Pages/Profile.dart';
+import 'package:venue_vista/Pages/Report.dart';
+import 'package:venue_vista/Pages/AdminRequest.dart';
+import 'package:venue_vista/Components/Constants.dart';
 
 class AppDrawer extends StatefulWidget {
   const AppDrawer(
@@ -74,6 +73,8 @@ class _AppDrawerState extends State<AppDrawer> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => ProfileScreen(
+                                    uid: widget.uid,
+                                    isAdmin:widget.isAdmin,
                                     userEmail: widget.userEmail,
                                     userName: widget.userName,
                                   )));
@@ -106,46 +107,34 @@ class _AppDrawerState extends State<AppDrawer> {
                         userName: widget.userName,
                         userEmail: widget.userEmail))),
           ),
-          ListTile(
+          widget.isAdmin?ListTile(
               leading: const Icon(
                 Icons.bar_chart,
                 color: secondaryColor,
               ),
-              title: Text('Monthly Report',
+              title: Text('Report',
                   style: GoogleFonts.poppins(
                     color: secondaryColor,
                   )),
               onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => DepartmentBarChart()))),
-          ListTile(
-            leading: const Icon(
-              Icons.bar_chart,
-              color: secondaryColor,
-            ),
-            title: Text('Yearly Report',
-                style: GoogleFonts.poppins(
-                  color: secondaryColor,
-                )),
-            onTap: () => Navigator.push(context,
-                MaterialPageRoute(builder: (context) => DepartmentBarChart())),
-          ),
+                      builder: (context) => DepartmentMonthlyBarChart()))):Container(),
           ListTile(
             leading: const Icon(
               Icons.check,
               color: secondaryColor,
             ),
-            title: Text('Booking Verification',
+            title: Text('Request Verification',
                 style: GoogleFonts.poppins(
                   color: secondaryColor,
                 )),
             onTap: () => Navigator.push(context,
-                MaterialPageRoute(builder: (context) =>widget.isAdmin?AdminAuditoriumScreen(
+                MaterialPageRoute(builder: (context) =>widget.isAdmin?AdminRequest(
                         uid:widget.uid,
                         isAdmin: widget.isAdmin,
                         userName: widget.userName,
-                        userEmail: widget.userEmail) :AuditoriumScreen(
+                        userEmail: widget.userEmail) :Request(
                         uid:widget.uid,
                         isAdmin: widget.isAdmin,
                         userName: widget.userName,

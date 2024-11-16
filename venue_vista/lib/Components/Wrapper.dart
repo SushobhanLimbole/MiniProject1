@@ -1,4 +1,4 @@
-import 'package:venue_vista/Constants.dart';
+import 'package:venue_vista/Components/Constants.dart';
 import 'package:venue_vista/Pages/HomePage.dart';
 import 'package:venue_vista/Pages/SignInPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';

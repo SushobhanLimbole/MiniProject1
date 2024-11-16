@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 class HelpPage extends StatelessWidget {
   // Developer contact information
@@ -12,13 +11,13 @@ class HelpPage extends StatelessWidget {
       'linkedin': 'www.linkedin.com/in/parnika-pise-9a9876243',
     },
     {
-      'name': 'Pranav Ghorpade',
-      'email': 'pranav.ghorapade05@gmail.com',
-      'linkedin': 'www.google.com',
-    },
-    {
       'name': 'Prathmesh Jadhav',
       'email': 'jadhavprathmesh284@gmail.com',
+      'linkedin': 'https://www.linkedin.com/in/prathmesh-jadhav-6a71b4257',
+    },
+    {
+      'name': 'Pranav Ghorpade',
+      'email': 'pranav.ghorapade05@gmail.com',
       'linkedin': 'www.google.com',
     },
     {

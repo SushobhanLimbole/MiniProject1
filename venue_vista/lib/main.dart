@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:venue_vista/Pages/SignInPage.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:venue_vista/constants.dart';
+import 'package:venue_vista/Components/constants.dart';
 import 'package:venue_vista/firebase_options.dart';
 
 void main() async {
