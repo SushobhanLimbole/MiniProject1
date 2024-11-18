@@ -191,12 +191,12 @@ class _AuditoriumScreenState extends State<Request> {
 
 Future<void> onAccept(DocumentSnapshot event) async {
   await event.reference.update({'isApproved': true});
-  print("Event '${event['eventName']}' has been accepted.");
+  debugPrint("Event '${event['eventName']}' has been accepted.");
 }
 
 Future<void> onReject(DocumentSnapshot event) async {
   await event.reference.delete();
-  print("Event '${event['eventName']}' has been rejected.");
+  debugPrint("Event '${event['eventName']}' has been rejected.");
 }
 
 void showBottomSheet(

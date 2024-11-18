@@ -202,7 +202,7 @@ Future<void> onAccept(DocumentSnapshot event) async {
 
 Future<void> onReject(DocumentSnapshot event) async {
   await event.reference.delete();
-  print("Event '${event['eventName']}' has been rejected.");
+  debugPrint("Event '${event['eventName']}' has been rejected.");
 }
 
 void showBottomSheet(

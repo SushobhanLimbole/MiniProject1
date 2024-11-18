@@ -21,7 +21,7 @@ class Demo extends StatefulWidget {
 
 Future<void> onReject(DocumentSnapshot event) async {
   await event.reference.delete();
-  print("Event '${event['eventName']}' has been delete.");
+  debugPrint("Event '${event['eventName']}' has been delete.");
 }
 
 class _DemoState extends State<Demo> {

@@ -8,7 +8,7 @@ class HelpPage extends StatelessWidget {
     {
       'name': 'Parnika Pise',
       'email': 'parnikapise08@gmail.com',
-      'linkedin': 'www.linkedin.com/in/parnika-pise-9a9876243',
+      'linkedin': 'https://www.linkedin.com/in/parnika-pise-9a9876243',
     },
     {
       'name': 'Prathmesh Jadhav',
@@ -18,14 +18,13 @@ class HelpPage extends StatelessWidget {
     {
       'name': 'Pranav Ghorpade',
       'email': 'pranav.ghorapade05@gmail.com',
-      'linkedin': 'www.google.com',
+      'linkedin': 'https://www.linkedin.com/in/pranav-ghorpade-333126257',
     },
     {
       'name': 'Prasad Gurav',
-      'email': 'prasadgurav@gmail.com',
-      'linkedin': 'www.google.com',
+      'email': 'pg0849363@gmail.com',
+      'linkedin': 'https://www.linkedin.com/in/prasad-gurav-160655339',
     },
-    // Add more developers as needed
   ];
 
   // Method to launch URLs
@@ -44,7 +43,7 @@ class HelpPage extends StatelessWidget {
       throw 'Could not launch ${Uri.parse(fullUrl)}';
     }
   } catch (e) {
-    print('Error launching URL: $e');
+    debugPrint('Error launching URL: $e');
   }
 }
 

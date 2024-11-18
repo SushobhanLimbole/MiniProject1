@@ -60,12 +60,12 @@ class _SignInPageState extends State<SignInPage> {
 
           // Get the user ID (document ID) and other data
           userId = uid.id; // This is the document ID
-          print("User ID: $userId");
+          debugPrint("User ID: $userId");
         } else {
-          print("No user found with the provided email.");
+          debugPrint("No user found with the provided email.");
         }
       } catch (e) {
-        print("Error fetching user ID: $e");
+        debugPrint("Error fetching user ID: $e");
       }
       try {
         // Fetch the user document from Firestore based on the email
