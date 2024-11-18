@@ -205,7 +205,6 @@ class _SignInPageState extends State<SignInPage> {
                   },
                 ),
                 const SizedBox(height: 16.0),
-
                 // Password TextField
                 TextFormField(
                   controller: passwordController,

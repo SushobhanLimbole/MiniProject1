@@ -45,10 +45,24 @@ dependencies:
   cloud_firestore: ^5.3.0
   firebase_auth: ^5.3.2
   url_launcher: ^6.3.1
+  http: ^1.2.2
+#  mailer: ^6.2.0
+#  flutter_email_sender: ^6.0.3
+#  shelf: ^1.4.1
+#  shelf_router: ^1.1.4
+#  shelf_cors_headers: ^0.1.5
+
+#flutter_native_splash:
+#  color: "F3C1CA" # Background color of the splash screen (use a hex code).
+#  image: assets/splash_screen1.png # Path to your splash screen image (logo or graphic).
+#  android: true # Enable splash screen for Android.
+#  web: false # Disable splash screen for web.
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_dotenv: ^5.0.2
+#  flutter_mailer: ^2.0.0
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

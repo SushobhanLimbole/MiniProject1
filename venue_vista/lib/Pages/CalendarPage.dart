@@ -362,7 +362,7 @@ Future<void> addTopic(
                       ),
                     ),
                     SizedBox(
-                      height: 60,
+                      height: 140,
                     )
                   ],
                 ),

@@ -1,8 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:venue_vista/Components/constants.dart';
 import 'package:venue_vista/Pages/SignInPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:math';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -11,17 +15,21 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  
+
   final FirebaseAuth _authService = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>(); // Key for the form
   final TextEditingController userNameController = TextEditingController();
+  final TextEditingController otpController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
   bool _isPasswordVisible = true;
   bool _isConfirmPasswordVisible = true;
+  bool isVerified = false;
   String? selectedRole; // This will hold the selected role from the dropdown
   String? selectedDepartment;
+  String? otp;
 
   final List<String> roles = ['Admin', 'Faculty']; // Roles list
   final List<String> departments = [
@@ -31,6 +39,78 @@ class _SignUpPageState extends State<SignUpPage> {
     'ENTC',
     'AIDS'
   ];
+  String generateOTP(int length) {
+    const chars = '0123456789'; // Allowed characters for the OTP (digits only)
+    final random = Random(); // Instance of Random to generate random numbers
+    return String.fromCharCodes(
+      Iterable.generate(
+          length, (_) => chars.codeUnitAt(random.nextInt(chars.length))),
+    );
+  }
+
+  Future sendEmail(String email) async {
+    if (email.isEmpty || email.trim().isEmpty) {
+      // Email is null or empty
+      debugPrint("Error: Email cannot be null or empty");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Please enter a valid email address")),
+      );
+      return; // Exit the function early
+    }
+
+    try {
+      final url = Uri.parse("https://api.emailjs.com/api/v1.0/email/send");
+      const serviceid =
+          "service_epjudfi"; // Replace with your EmailJS service ID
+      const templateid =
+          "template_itcxm4e"; // Replace with your EmailJS template ID
+      const publickey =
+          "WZlIBgRns3yRc1tAd"; // Replace with your EmailJS public key
+      const privateKey =
+          "1yZuslns59KY87r-ue5yA"; // Replace with your EmailJS private key
+
+      final otp = generateOTP(6);
+      this.otp = otp; // Store OTP for verification
+
+      final response = await http.post(
+        url,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: json.encode({
+          "service_id": serviceid,
+          "template_id": templateid,
+          "user_id": publickey, // Pass the public key here
+          "accessToken": privateKey,
+          "template_params": {
+            "otp": otp, // OTP parameter for your template
+            "email": email // Recipient's email address
+          },
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        debugPrint("Email sent successfully!");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("OTP sent successfully to $email")),
+        );
+        return response.statusCode;
+      } else {
+        debugPrint("Failed to send email. Status: ${response.statusCode}");
+        debugPrint("Response body: ${response.body}");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Failed to send OTP. Please try again.")),
+        );
+        return response.statusCode;
+      }
+    } catch (e) {
+      debugPrint("Error occurred while sending email: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error occurred while sending email: $e")),
+      );
+      return null;
+    }
+  }
 
   void _trySubmit() async {
     final isValid = _formKey.currentState?.validate();
@@ -71,12 +151,15 @@ class _SignUpPageState extends State<SignUpPage> {
               await user.updateDisplayName(userNameController.text);
 
               // Add user details to Firestore
-              await _firestore.collection('Users').doc(emailController.text).set({
+              await _firestore
+                  .collection('Users')
+                  .doc(emailController.text)
+                  .set({
                 'userName': userNameController.text,
                 'email': emailController.text,
                 'password': passwordController.text,
                 'role': selectedRole,
-                'department':selectedDepartment,
+                'department': selectedDepartment,
               });
 
               ScaffoldMessenger.of(context)
@@ -133,6 +216,40 @@ class _SignUpPageState extends State<SignUpPage> {
         );
       }
     }
+  }
+
+  void verificationDialog() {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text("Verify OTP"),
+        content: TextFormField(
+          controller: otpController,
+          decoration: InputDecoration(
+            labelText: 'Enter OTP',
+            border: OutlineInputBorder(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              if (otpController.text.trim() == otp.toString()) {
+                setState(() => isVerified = true);
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('OTP Verified!')),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Incorrect OTP, try again')),
+                );
+              }
+            },
+            child: Text("Verify"),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -204,6 +321,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       child: Icon(Icons.email),
                     ),
                   ),
+                  autofillHints: null,
                   validator: (value) {
                     // Basic email validation
                     if (value == null || value.isEmpty) {
@@ -217,7 +335,56 @@ class _SignUpPageState extends State<SignUpPage> {
                   },
                 ),
                 const SizedBox(height: 16.0),
-
+                isVerified
+                    ? ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 15),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(100)),
+                          side: BorderSide(color: secondaryColor),
+                          backgroundColor: primaryColor,
+                        ),
+                        child: Container(
+                          width: 200,
+                          child: Center(
+                            child: Text(
+                              "Verified",
+                              style: GoogleFonts.poppins(
+                                  fontSize: 16, color: secondaryColor),
+                            ),
+                          ),
+                        ),
+                      )
+                    : ElevatedButton(
+                        onPressed: () {
+                          sendEmail(emailController.text.trim());
+                          if (emailController.text.trim().isNotEmpty) {
+                            verificationDialog();
+                            return;
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 15),
+                          shape: RoundedRectangleBorder(
+                              side: BorderSide(color: secondaryColor),
+                              borderRadius: BorderRadius.circular(100)),
+                          backgroundColor: primaryColor,
+                        ),
+                        child: Container(
+                          width: 200,
+                          child: Center(
+                            child: Text(
+                              "Verify Email",
+                              style: GoogleFonts.poppins(
+                                  fontSize: 16, color: secondaryColor),
+                            ),
+                          ),
+                        ),
+                      ),
+                const SizedBox(height: 16.0),
                 // Password TextField
                 TextFormField(
                   controller: passwordController,
@@ -359,19 +526,36 @@ class _SignUpPageState extends State<SignUpPage> {
                 const SizedBox(height: 30.0),
 
                 // Sign Up Button
-                ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      // If all validations pass
-                      debugPrint('Email: ${emailController.text}');
-                      debugPrint('Password: ${passwordController.text}');
-                      debugPrint('Role: $selectedRole');
-                      _trySubmit();
-                    }},
-                  child: Text(
-                    'Create My Account',
-                  ),
-                ),
+                isVerified
+                    ? ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            // If all validations pass
+                            debugPrint('Email: ${emailController.text}');
+                            debugPrint('Password: ${passwordController.text}');
+                            debugPrint('Role: $selectedRole');
+                            _trySubmit();
+                          }
+                        },
+                        child: Text(
+                          'Create My Account',
+                        ),
+                      )
+                    : ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            // If all validations pass
+                            // debugPrint('Email: ${emailController.text}');
+                            // debugPrint('Password: ${passwordController.text}');
+                            // debugPrint('Role: $selectedRole');
+                            // _trySubmit();
+                            return;
+                          }
+                        },
+                        child: Text(
+                          'Create My Account',
+                        ),
+                      ),
               ],
             ),
           ),

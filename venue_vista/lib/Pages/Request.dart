@@ -33,7 +33,7 @@ class _AuditoriumScreenState extends State<Request> {
         backgroundColor: primaryColor,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.only(left:16.0,right: 16,top: 5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -195,7 +195,7 @@ Future<void> onAccept(DocumentSnapshot event) async {
 }
 
 Future<void> onReject(DocumentSnapshot event) async {
-  await event.reference.update({'isApproved': false});
+  await event.reference.delete();
   print("Event '${event['eventName']}' has been rejected.");
 }
 
@@ -249,7 +249,40 @@ void showBottomSheet(
                       DetailRow(label: 'Attendees', value: event['attendee']),
                       DetailRow(label: 'Time Slot', value:'${event['slot']}'),
                       SizedBox(height: 10),
-
+                      SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {},
+                            child: event['isApproved']?Text('ACCEPTED'):Text('ACCEPT'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: event['isApproved']? Colors.white:Colors.green,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 10),
+                              shape: RoundedRectangleBorder(
+                                side: event['isApproved']? BorderSide(color: Colors.green):BorderSide(color: Colors.white),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                            ),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              onReject(event);
+                              Navigator.pop(context);
+                            },
+                            child: Text('REJECT'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 10),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),

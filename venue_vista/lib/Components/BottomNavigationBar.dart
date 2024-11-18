@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:venue_vista/Components/Constants.dart';
-import 'package:venue_vista/Pages/MyRequests.dart';
+import 'package:venue_vista/Pages/MyBookings.dart';
 import 'package:venue_vista/Pages/CalendarPage.dart';
 import 'package:venue_vista/Pages/HomePage.dart';
 import 'package:venue_vista/Pages/Profile.dart';

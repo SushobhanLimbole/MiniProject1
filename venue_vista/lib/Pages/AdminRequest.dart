@@ -44,7 +44,6 @@ class _AdminAuditoriumScreenState extends State<AdminRequest> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 5),
             StreamBuilder(
               stream:
                   FirebaseFirestore.instance.collection('Users').snapshots(),
@@ -90,7 +89,7 @@ class _AdminAuditoriumScreenState extends State<AdminRequest> {
                                             context, event, department);
                                       },
                                       child: Padding(
-                                        padding: const EdgeInsets.all(16.0),
+                                        padding: const EdgeInsets.only(top:5.0,left: 15,right: 15,bottom: 5),
                                         child: Row(
                                           children: [
                                             CircleAvatar(

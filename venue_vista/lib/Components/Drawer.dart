@@ -4,7 +4,7 @@ import 'package:venue_vista/Pages/FAQsPage.dart';
 import 'package:venue_vista/Pages/HelpPage.dart';
 import 'package:venue_vista/Pages/Request.dart';
 import 'package:venue_vista/Pages/SignInPage.dart';
-import 'package:venue_vista/Pages/MyRequests.dart';
+import 'package:venue_vista/Pages/MyBookings.dart';
 import 'package:venue_vista/Pages/Profile.dart';
 import 'package:venue_vista/Pages/Report.dart';
 import 'package:venue_vista/Pages/AdminRequest.dart';
