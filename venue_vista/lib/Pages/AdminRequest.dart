@@ -8,7 +8,8 @@ class AdminRequest extends StatefulWidget {
   final String userName;
   final String userEmail;
 
-  AdminRequest({
+  const AdminRequest({
+    super.key,
     required this.uid,
     required this.userName,
     required this.userEmail,
@@ -24,158 +25,140 @@ class _AdminAuditoriumScreenState extends State<AdminRequest> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Requests Verification',
+        title: const Text(
+          'Request Verification',
           style: TextStyle(color: secondaryColor),
         ),
         centerTitle: true,
         backgroundColor: primaryColor,
       ),
       body: Padding(
-        padding: const EdgeInsets.only(left: 10.0,right: 10,top: 5),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'All Requests',
-              style: TextStyle(
-                color: secondaryColor,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            StreamBuilder(
-              stream:
-                  FirebaseFirestore.instance.collection('Users').snapshots(),
-              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                }
-                if (snapshot.hasData) {
-                  final users = snapshot.data!.docs;
-                  return Expanded(
-                    child: ListView.builder(
-                      itemCount: users.length,
-                      itemBuilder: (context, index) {
-                        var user = users[index];
-                        var userName = user['userName'];
-                        var department = user['department'];
-                        return StreamBuilder(
-                          stream:
-                              user.reference.collection('Events').snapshots(),
-                          builder: (context,
-                              AsyncSnapshot<QuerySnapshot> eventSnapshot) {
-                            // if (eventSnapshot.connectionState ==
-                            //     ConnectionState.waiting) {
-                            //   return Center(child: CircularProgressIndicator());
-                            // }
-                            if (eventSnapshot.hasData &&
-                                eventSnapshot.data!.docs.isNotEmpty) {
-                              final events = eventSnapshot.data!.docs;
-                              return Column(
-                                children: events.map((event) {
-                                  Timestamp timestamp = event['nowDate'];
-                                  DateTime requestTime = timestamp.toDate();
-                                  var formatedDate = formatDuration(
-                                      DateTime.now().difference(requestTime));
-                                  return Card(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(15.0),
-                                    ),
-                                    elevation: 5,
-                                    child: InkWell(
-                                      onTap: () {
-                                        showBottomSheet(
-                                            context, event, department);
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(top:5.0,left: 15,right: 15,bottom: 5),
-                                        child: Row(
-                                          children: [
-                                            CircleAvatar(
-                                              child: Text(widget.userName
-                                                  .substring(0, 1)
-                                                  .toUpperCase()),
-                                              backgroundColor: Colors.blue,
-                                            ),
-                                            SizedBox(width: 16.0),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                    'Event: ${event['eventName']}',
-                                                    style: TextStyle(
-                                                        fontSize: 16,
-                                                        color: secondaryColor)),
-                                                Text('Dept: $department',
-                                                    style: TextStyle(
-                                                        fontSize: 16,
-                                                        color: secondaryColor)),
-                                                Text('From: $userName',
-                                                    style: TextStyle(
-                                                        fontSize: 16,
-                                                        color: secondaryColor)),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceAround,
-                                                  children: [
-                                                    Text(
-                                                        'Requested ${formatedDate} ago',
-                                                        style: TextStyle(
-                                                            fontSize: 12,
-                                                            color:
-                                                                Colors.grey)),
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              left: 5.0),
-                                                      child: event['isApproved']
-                                                          ? Text(
-                                                              "Approved",
-                                                              style: TextStyle(
-                                                                  fontSize: 12,
-                                                                  color: Colors
-                                                                      .green,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
-                                                            )
-                                                          : Text(
-                                                              "Not Approved",
-                                                              style: TextStyle(
-                                                                  fontSize: 12,
-                                                                  color: Colors
-                                                                      .red,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
-                                                            ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
+        padding: const EdgeInsets.only(left: 10.0, right: 10,top: 10),
+        child: StreamBuilder(
+          stream: FirebaseFirestore.instance.collection('Users').snapshots(),
+          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (snapshot.hasData) {
+              final users = snapshot.data!.docs;
+              return ListView.builder(
+                itemCount: users.length,
+                itemBuilder: (context, index) {
+                  var user = users[index];
+                  var userName = user['userName'];
+                  var department = user['department'];
+                  return StreamBuilder(
+                    stream: user.reference
+                        .collection('Events')
+                        .orderBy('startDate', descending: false)
+                        .snapshots(),
+                    builder: (context,
+                        AsyncSnapshot<QuerySnapshot> eventSnapshot) {
+                      if (eventSnapshot.hasData &&
+                          eventSnapshot.data!.docs.isNotEmpty) {
+                        final events = eventSnapshot.data!.docs;
+                        return Column(
+                          children: events.map((event) {
+                            Timestamp timestamp = event['nowDate'];
+                            DateTime requestTime = timestamp.toDate();
+                            var formatedDate = formatDuration(
+                                DateTime.now().difference(requestTime));
+                            return Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              elevation: 5,
+                              child: InkWell(
+                                onTap: () {
+                                  showBottomSheet(context, event, department);
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 15, right: 15, bottom: 5),
+                                  child: Row(
+                                    children: [
+                                      CircleAvatar(
+                                        backgroundColor: Colors.blue,
+                                        child: Text(widget.userName
+                                            .substring(0, 1)
+                                            .toUpperCase()),
                                       ),
-                                    ),
-                                  );
-                                }).toList(),
-                              );
-                            }
-                            return Center(child: Text(""));
-                          },
+                                      const SizedBox(width: 16.0),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text('Event: ${event['eventName']}',
+                                              style: const TextStyle(
+                                                  fontSize: 14,
+                                                  color: secondaryColor)),
+                                          Text('Dept: $department',
+                                              style: const TextStyle(
+                                                  fontSize: 14,
+                                                  color: secondaryColor)),
+                                          Text('From: $userName',
+                                              style: const TextStyle(
+                                                  fontSize: 14,
+                                                  color: secondaryColor)),
+                                          Text('Venue: ${event['hallId']}',
+                                              style: const TextStyle(
+                                                  fontSize: 14,
+                                                  color: secondaryColor)),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            children: [
+                                              Text(
+                                                  'Requested $formatedDate ago',
+                                                  style: const TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.grey)),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.only(
+                                                        left: 5.0),
+                                                child: event['isApproved']
+                                                    ? const Text(
+                                                        "Approved",
+                                                        style: TextStyle(
+                                                            fontSize: 10,
+                                                            color:
+                                                                Colors.green,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      )
+                                                    : const Text(
+                                                        "Not Approved",
+                                                        style: TextStyle(
+                                                            fontSize: 10,
+                                                            color: Colors.red,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          }).toList(),
                         );
-                      },
-                    ),
+                      }
+                      return const Center();
+                    },
                   );
-                }
-                return Center(child: Text('No Users Found.'));
-              },
-            ),
-          ],
+                },
+              );
+            }
+            return const Center(child: Text('No Users Found.'));
+          },
         ),
       ),
     );
@@ -195,9 +178,9 @@ class _AdminAuditoriumScreenState extends State<AdminRequest> {
 }
 
 Future<void> onAccept(DocumentSnapshot event) async {
-  event['isApproved']?
-  await event.reference.update({'isApproved': false}):
-  await event.reference.update({'isApproved': true});
+  event['isApproved']
+      ? await event.reference.update({'isApproved': false})
+      : await event.reference.update({'isApproved': true});
 }
 
 Future<void> onReject(DocumentSnapshot event) async {
@@ -216,7 +199,7 @@ void showBottomSheet(
         widthFactor: 1.0,
         child: Container(
           padding: const EdgeInsets.all(16.0),
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20.0),
@@ -227,7 +210,7 @@ void showBottomSheet(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'Event Details',
                   style: TextStyle(
                     color: secondaryColor,
@@ -235,13 +218,13 @@ void showBottomSheet(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.grey[200],
                     borderRadius: BorderRadius.circular(10.0),
                   ),
-                  padding: EdgeInsets.all(12.0),
+                  padding: const EdgeInsets.all(12.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -253,7 +236,8 @@ void showBottomSheet(
                       DetailRow(label: 'Speaker', value: event['speaker']),
                       DetailRow(label: 'Attendees', value: event['attendee']),
                       DetailRow(label: 'Time Slot', value: '${event['slot']}'),
-                      SizedBox(height: 20),
+                      DetailRow(label: 'Venue', value: '${event['hallId']}'),
+                      const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -262,31 +246,37 @@ void showBottomSheet(
                               onAccept(event);
                               Navigator.pop(context);
                             },
-                            child: event['isApproved']?Text('ACCEPTED'):Text('ACCEPT'),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: event['isApproved']? Colors.white:Colors.green,
-                              padding: EdgeInsets.symmetric(
+                              backgroundColor: event['isApproved']
+                                  ? Colors.white
+                                  : Colors.green,
+                              padding: const EdgeInsets.symmetric(
                                   horizontal: 20, vertical: 10),
                               shape: RoundedRectangleBorder(
-                                side: event['isApproved']? BorderSide(color: Colors.green):BorderSide(color: Colors.white),
+                                side: event['isApproved']
+                                    ? const BorderSide(color: Colors.green)
+                                    : const BorderSide(color: Colors.white),
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
                             ),
+                            child: event['isApproved']
+                                ? Text('ACCEPTED')
+                                : Text('ACCEPT'),
                           ),
                           ElevatedButton(
                             onPressed: () {
                               onReject(event);
                               Navigator.pop(context);
                             },
-                            child: Text('REJECT'),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.red,
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                   horizontal: 20, vertical: 10),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
                             ),
+                            child: Text('REJECT'),
                           ),
                         ],
                       ),
@@ -306,7 +296,7 @@ class DetailRow extends StatelessWidget {
   final String label;
   final String value;
 
-  DetailRow({required this.label, required this.value});
+  const DetailRow({super.key, required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
@@ -317,12 +307,12 @@ class DetailRow extends StatelessWidget {
         children: [
           Text(
             label,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
-          SizedBox(height: 4.0),
+          const SizedBox(height: 4.0),
           Text(
             value,
-            style: TextStyle(fontSize: 16, color: secondaryColor),
+            style: const TextStyle(fontSize: 16, color: secondaryColor),
           ),
         ],
       ),

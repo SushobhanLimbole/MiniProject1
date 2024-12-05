@@ -10,7 +10,9 @@ class AuditoriumCard extends StatelessWidget {
   final bool isAdmin;
   final String userName;
   final String userEmail;
+  final String hallId;
   const AuditoriumCard({
+    required this.hallId,
     required this.uid,
     required this.isAdmin,
     required this.userName,
@@ -18,8 +20,8 @@ class AuditoriumCard extends StatelessWidget {
     required this.imageUrl,
     required this.auditoriumName,
     required this.location,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,14 +30,14 @@ class AuditoriumCard extends StatelessWidget {
           context,
           MaterialPageRoute(
               builder: (context) => CalendarPage(
-                  uid: uid, isAdmin: isAdmin, userName: userName, userEmail: userEmail))),
+                  hallId: hallId ,uid: uid, isAdmin: isAdmin, userName: userName, userEmail: userEmail))),
       child: Container(
-        padding: EdgeInsets.all(8.0),
-        margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+        padding: const EdgeInsets.all(8.0),
+        margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20.0),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: Colors.black26,
               blurRadius: 15.0,
@@ -88,7 +90,7 @@ class AuditoriumCard extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 10.0),
+            const SizedBox(height: 10.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -97,7 +99,7 @@ class AuditoriumCard extends StatelessWidget {
                   color: Colors.grey[600],
                   size: 16.0,
                 ),
-                SizedBox(width: 2.0),
+                const SizedBox(width: 2.0),
                 Text(
                   location,
                   style: GoogleFonts.montserrat(
@@ -105,7 +107,7 @@ class AuditoriumCard extends StatelessWidget {
                       color: Colors.grey[500],
                       fontWeight: FontWeight.w500),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 5,
                 )
               ],

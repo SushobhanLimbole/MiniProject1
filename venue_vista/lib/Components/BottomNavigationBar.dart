@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:venue_vista/Components/Constants.dart';
 import 'package:venue_vista/Pages/MyBookings.dart';
-import 'package:venue_vista/Pages/CalendarPage.dart';
+//import 'package:new_venue_vista/Pages/CalendarPage.dart';
 import 'package:venue_vista/Pages/HomePage.dart';
 import 'package:venue_vista/Pages/Profile.dart';
 
@@ -12,12 +12,14 @@ class BottomNavigatorBar extends StatelessWidget {
       required this.uid,
       required this.isAdmin,
       required this.userEmail,
-      required this.userName});
+      required this.userName,
+      required this.hallId});
   final String uid;
   final int index;
   final bool isAdmin;
   final String userName;
   final String userEmail;
+  final String hallId;
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
@@ -34,7 +36,7 @@ class BottomNavigatorBar extends StatelessWidget {
                         isAdmin: isAdmin,
                         userEmail: userEmail,
                         userName: userName))),
-            child: Icon(
+            child: const Icon(
               Icons.home,
               color: primaryColor,
             ),
@@ -43,7 +45,7 @@ class BottomNavigatorBar extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
             ),
-            child: Icon(
+            child: const Icon(
               Icons.home,
               color: primaryColor,
             ),
@@ -52,31 +54,32 @@ class BottomNavigatorBar extends StatelessWidget {
           tooltip: "Home",
           backgroundColor: secondaryColor,
         ),
-        BottomNavigationBarItem(
-            icon: GestureDetector(
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CalendarPage(
-                    uid: uid,
-                    isAdmin: isAdmin,
-                    userEmail: userEmail,
-                    userName: userName,
-                  ),
-                ),
-              ),
-              child: Icon(
-                Icons.calendar_month,
-                color: primaryColor,
-              ),
-            ),
-            activeIcon: Icon(
-              Icons.calendar_month_outlined,
-              color: primaryColor,
-            ),
-            backgroundColor: secondaryColor,
-            label: "Calendar",
-            tooltip: "Check Availavility"),
+        // BottomNavigationBarItem(
+        //     icon: GestureDetector(
+        //       onTap: () => Navigator.push(
+        //         context,
+        //         MaterialPageRoute(
+        //           builder: (context) => CalendarPage(
+        //             hallId: hallId,
+        //             uid: uid,
+        //             isAdmin: isAdmin,
+        //             userEmail: userEmail,
+        //             userName: userName,
+        //           ),
+        //         ),
+        //       ),
+        //       child: const Icon(
+        //         Icons.calendar_month,
+        //         color: primaryColor,
+        //       ),
+        //     ),
+        //     activeIcon: const Icon(
+        //       Icons.calendar_month_outlined,
+        //       color: primaryColor,
+        //     ),
+        //     backgroundColor: secondaryColor,
+        //     label: "Calendar",
+        //     tooltip: "Check Availavility"),
         BottomNavigationBarItem(
             icon: GestureDetector(
               onTap: () => Navigator.push(
@@ -84,16 +87,17 @@ class BottomNavigatorBar extends StatelessWidget {
                   MaterialPageRoute(
                       builder: (context) => Demo(
                           uid: uid,
+                          hallId: hallId,
                           isAdmin: isAdmin,
                           userName: userName,
                           userEmail: userEmail))),
-              child: Icon(
-                Icons.post_add_outlined,
+              child: const Icon(
+                Icons.event,
                 color: primaryColor,
               ),
             ),
-            activeIcon: Icon(
-              Icons.post_add_rounded,
+            activeIcon: const Icon(
+              Icons.event_outlined,
               color: primaryColor,
             ),
             backgroundColor: secondaryColor,
@@ -106,15 +110,16 @@ class BottomNavigatorBar extends StatelessWidget {
                   MaterialPageRoute(
                       builder: (context) => ProfileScreen(
                           uid: uid,
+                          hallId:hallId,
                           isAdmin: isAdmin,
                           userName: userName,
                           userEmail: userEmail))),
-              child: Icon(
+              child: const Icon(
                 Icons.account_circle_outlined,
                 color: primaryColor,
               ),
             ),
-            activeIcon: Icon(
+            activeIcon: const Icon(
               Icons.account_circle,
               color: primaryColor,
             ),

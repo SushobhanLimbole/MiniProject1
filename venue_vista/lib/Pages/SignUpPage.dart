@@ -9,6 +9,8 @@ import 'dart:convert';
 import 'dart:math';
 
 class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
+
   @override
   _SignUpPageState createState() => _SignUpPageState();
 }
@@ -53,7 +55,7 @@ class _SignUpPageState extends State<SignUpPage> {
       // Email is null or empty
       debugPrint("Error: Email cannot be null or empty");
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Please enter a valid email address")),
+        const SnackBar(content: Text("Please enter a valid email address")),
       );
       return; // Exit the function early
     }
@@ -99,7 +101,7 @@ class _SignUpPageState extends State<SignUpPage> {
         debugPrint("Failed to send email. Status: ${response.statusCode}");
         debugPrint("Response body: ${response.body}");
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Failed to send OTP. Please try again.")),
+          const SnackBar(content: Text("Failed to send OTP. Please try again.")),
         );
         return response.statusCode;
       }
@@ -118,7 +120,7 @@ class _SignUpPageState extends State<SignUpPage> {
       _formKey.currentState?.save();
 
       // Show loading SnackBar
-      final loadingSnackBar = SnackBar(
+      final loadingSnackBar = const SnackBar(
         content: Row(
           children: [
             CircularProgressIndicator(),
@@ -136,7 +138,7 @@ class _SignUpPageState extends State<SignUpPage> {
             ScaffoldMessenger.of(context)
                 .hideCurrentSnackBar(); // Hide loading SnackBar
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Please confirm your password.')),
+              const SnackBar(content: Text('Please confirm your password.')),
             );
           } else if (passwordController.text ==
               confirmPasswordController.text) {
@@ -165,14 +167,14 @@ class _SignUpPageState extends State<SignUpPage> {
               ScaffoldMessenger.of(context)
                   .hideCurrentSnackBar(); // Hide loading SnackBar
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('User registered successfully')),
+                const SnackBar(content: Text('User registered successfully')),
               );
 
               // Navigate to SignInPage after successful registration
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SignInPage(),
+                  builder: (context) => const SignInPage(),
                 ),
               );
             }
@@ -180,14 +182,14 @@ class _SignUpPageState extends State<SignUpPage> {
             ScaffoldMessenger.of(context)
                 .hideCurrentSnackBar(); // Hide loading SnackBar
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Password mismatch')),
+              const SnackBar(content: Text('Password mismatch')),
             );
           }
         } else {
           ScaffoldMessenger.of(context)
               .hideCurrentSnackBar(); // Hide loading SnackBar
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Please enter your username')),
+            const SnackBar(content: Text('Please enter your username')),
           );
         }
       } on FirebaseAuthException catch (e) {
@@ -210,7 +212,7 @@ class _SignUpPageState extends State<SignUpPage> {
             .hideCurrentSnackBar(); // Hide loading SnackBar
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('An unexpected error occurred.'),
+            content: const Text('An unexpected error occurred.'),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
@@ -222,10 +224,10 @@ class _SignUpPageState extends State<SignUpPage> {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: Text("Verify OTP"),
+        title: const Text("Verify OTP"),
         content: TextFormField(
           controller: otpController,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             labelText: 'Enter OTP',
             border: OutlineInputBorder(),
           ),
@@ -237,15 +239,15 @@ class _SignUpPageState extends State<SignUpPage> {
                 setState(() => isVerified = true);
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('OTP Verified!')),
+                  const SnackBar(content: Text('OTP Verified!')),
                 );
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Incorrect OTP, try again')),
+                  const SnackBar(content: Text('Incorrect OTP, try again')),
                 );
               }
             },
-            child: Text("Verify"),
+            child: const Text("Verify"),
           ),
         ],
       ),
@@ -314,9 +316,9 @@ class _SignUpPageState extends State<SignUpPage> {
                 // Email TextField
                 TextFormField(
                   controller: emailController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Email',
-                    prefixIcon: const Padding(
+                    prefixIcon: Padding(
                       padding: EdgeInsets.all(5),
                       child: Icon(Icons.email),
                     ),
@@ -327,7 +329,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your email';
                     }
-                    final emailPattern = r'^[^@]+@[^@]+\.[^@]+$';
+                    const emailPattern = r'^[^@]+@[^@]+\.[^@]+$';
                     if (!RegExp(emailPattern).hasMatch(value)) {
                       return 'Please enter a valid email';
                     }
@@ -339,14 +341,14 @@ class _SignUpPageState extends State<SignUpPage> {
                     ? ElevatedButton(
                         onPressed: () {},
                         style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               vertical: 15, horizontal: 15),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(100)),
-                          side: BorderSide(color: secondaryColor),
+                          side: const BorderSide(color: secondaryColor),
                           backgroundColor: primaryColor,
                         ),
-                        child: Container(
+                        child: SizedBox(
                           width: 200,
                           child: Center(
                             child: Text(
@@ -366,14 +368,14 @@ class _SignUpPageState extends State<SignUpPage> {
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               vertical: 15, horizontal: 15),
                           shape: RoundedRectangleBorder(
-                              side: BorderSide(color: secondaryColor),
+                              side: const BorderSide(color: secondaryColor),
                               borderRadius: BorderRadius.circular(100)),
                           backgroundColor: primaryColor,
                         ),
-                        child: Container(
+                        child: SizedBox(
                           width: 200,
                           child: Center(
                             child: Text(
@@ -477,9 +479,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       selectedDepartment = value;
                     });
                   },
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Select Department',
-                    prefixIcon: const Padding(
+                    prefixIcon: Padding(
                       padding: EdgeInsets.all(5),
                       child: Icon(Icons.business),
                     ),
@@ -508,9 +510,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       selectedRole = value;
                     });
                   },
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Select Role',
-                    prefixIcon: const Padding(
+                    prefixIcon: Padding(
                       padding: EdgeInsets.all(5),
                       child: Icon(Icons.person),
                     ),
@@ -537,7 +539,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             _trySubmit();
                           }
                         },
-                        child: Text(
+                        child: const Text(
                           'Create My Account',
                         ),
                       )
@@ -552,7 +554,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             return;
                           }
                         },
-                        child: Text(
+                        child: const Text(
                           'Create My Account',
                         ),
                       ),

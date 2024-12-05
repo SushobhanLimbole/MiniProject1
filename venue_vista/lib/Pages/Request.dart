@@ -8,7 +8,8 @@ class Request extends StatefulWidget {
   final String userName;
   final String userEmail;
 
-  Request({
+  const Request({
+    super.key,
     required this.uid,
     required this.userName,
     required this.userEmail,
@@ -20,12 +21,11 @@ class Request extends StatefulWidget {
 }
 
 class _AuditoriumScreenState extends State<Request> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Pending Requests',
           style: TextStyle(color: secondaryColor),
         ),
@@ -33,11 +33,11 @@ class _AuditoriumScreenState extends State<Request> {
         backgroundColor: primaryColor,
       ),
       body: Padding(
-        padding: const EdgeInsets.only(left:16.0,right: 16,top: 5),
+        padding: const EdgeInsets.only(left: 16.0, right: 16, top: 5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Pending Requests',
               style: TextStyle(
                 color: secondaryColor,
@@ -45,13 +45,15 @@ class _AuditoriumScreenState extends State<Request> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 5),
             StreamBuilder(
-              stream:
-                  FirebaseFirestore.instance.collection('Users').where("email",isEqualTo:widget.userEmail).snapshots(),
+              stream: FirebaseFirestore.instance
+                  .collection('Users')
+                  .where("email", isEqualTo: widget.userEmail)
+                  .orderBy('startDate', descending: false)
+                  .snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
                 if (snapshot.hasData) {
                   final users = snapshot.data!.docs;
@@ -62,22 +64,27 @@ class _AuditoriumScreenState extends State<Request> {
                         var user = users[index];
                         var department = user['department'];
                         return StreamBuilder(
-                          stream:
-                              user.reference.collection('Events').where("isApproved",isEqualTo: false).snapshots(),
+                          stream: user.reference
+                              .collection('Events')
+                              .where("isApproved", isEqualTo: false)
+                              .orderBy('startDate')
+                              .snapshots(),
                           builder: (context,
                               AsyncSnapshot<QuerySnapshot> eventSnapshot) {
                             if (eventSnapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              return Center(child: CircularProgressIndicator());
+                              return const Center(
+                                  child: CircularProgressIndicator());
                             }
                             if (eventSnapshot.hasData &&
                                 eventSnapshot.data!.docs.isNotEmpty) {
                               final events = eventSnapshot.data!.docs;
                               return Column(
                                 children: events.map((event) {
-                                  Timestamp timestamp=event['nowDate'];
+                                  Timestamp timestamp = event['nowDate'];
                                   DateTime requestTime = timestamp.toDate();
-                                  var formatedDate=formatDuration(DateTime.now().difference(requestTime));
+                                  var formatedDate = formatDuration(
+                                      DateTime.now().difference(requestTime));
                                   return Card(
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(15.0),
@@ -93,56 +100,67 @@ class _AuditoriumScreenState extends State<Request> {
                                         child: Row(
                                           children: [
                                             CircleAvatar(
+                                              backgroundColor: Colors.blue,
                                               child: Text(widget.userName
                                                   .substring(0, 1)
                                                   .toUpperCase()),
-                                              backgroundColor: Colors.blue,
                                             ),
-                                            SizedBox(width: 16.0),
+                                            const SizedBox(width: 16.0),
                                             Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
                                                     'Event: ${event['eventName']}',
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                         fontSize: 16,
                                                         color: secondaryColor)),
                                                 Text('Dept: $department',
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                         fontSize: 16,
                                                         color: secondaryColor)),
-                                                Text('From: ${event["startDate"]} to ${event["lastDate"]}',
-                                                    style: TextStyle(
+                                                Text(
+                                                    'From: ${event["startDate"]} to ${event["lastDate"]}',
+                                                    style: const TextStyle(
                                                         fontSize: 12,
                                                         color: secondaryColor)),
-                                                Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                Text(
+                                                    'Venue: ${event['hallId']}',
+                                                    style: const TextStyle(
+                                                        fontSize: 12,
+                                                        color: secondaryColor)),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceAround,
                                                   children: [
                                                     Text(
-                                                        'Requested ${formatedDate} ago',
-                                                        style: TextStyle(
+                                                        'Requested $formatedDate ago',
+                                                        style: const TextStyle(
                                                             fontSize: 12,
                                                             color:
                                                                 Colors.grey)),
-                                                    
                                                     Padding(
-                                                      padding: const EdgeInsets.only(left:5.0),
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 5.0),
                                                       child: event['isApproved']
-                                                          ? Text(
+                                                          ? const Text(
                                                               "Approved",
                                                               style: TextStyle(
                                                                   color: Colors
-                                                                      .green,fontSize: 12,
+                                                                      .green,
+                                                                  fontSize: 12,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .bold),
                                                             )
-                                                          : Text(
+                                                          : const Text(
                                                               "Not Approved",
                                                               style: TextStyle(
-                                                                fontSize: 12,
-                                                                  color:
-                                                                      Colors.red,
+                                                                  fontSize: 12,
+                                                                  color: Colors
+                                                                      .red,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .bold),
@@ -160,14 +178,14 @@ class _AuditoriumScreenState extends State<Request> {
                                 }).toList(),
                               );
                             }
-                            return Center(child: Text(""));
+                            return const Center(child: Text(""));
                           },
                         );
                       },
                     ),
                   );
                 }
-                return Center(child: Text('No Users Found.'));
+                return const Center(child: Text('No Users Found.'));
               },
             ),
           ],
@@ -211,7 +229,7 @@ void showBottomSheet(
         child: Container(
           padding: const EdgeInsets.all(16.0),
           width: 200,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20.0),
@@ -222,7 +240,7 @@ void showBottomSheet(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'Event Details',
                   style: TextStyle(
                     color: secondaryColor,
@@ -230,13 +248,16 @@ void showBottomSheet(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 20,width: 350,),
+                const SizedBox(
+                  height: 20,
+                  width: 350,
+                ),
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.grey[200],
                     borderRadius: BorderRadius.circular(10.0),
                   ),
-                  padding: EdgeInsets.all(12.0),
+                  padding: const EdgeInsets.all(12.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -247,39 +268,46 @@ void showBottomSheet(
                       DetailRow(label: 'Details', value: event['description']),
                       DetailRow(label: 'Speaker', value: event['speaker']),
                       DetailRow(label: 'Attendees', value: event['attendee']),
-                      DetailRow(label: 'Time Slot', value:'${event['slot']}'),
-                      SizedBox(height: 10),
-                      SizedBox(height: 20),
+                      DetailRow(label: 'Time Slot', value: '${event['slot']}'),
+                      DetailRow(label: 'Venue', value: '${event['hallId']}'),
+                      const SizedBox(height: 10),
+                      const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           ElevatedButton(
                             onPressed: () {},
-                            child: event['isApproved']?Text('ACCEPTED'):Text('ACCEPT'),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: event['isApproved']? Colors.white:Colors.green,
-                              padding: EdgeInsets.symmetric(
+                              backgroundColor: event['isApproved']
+                                  ? Colors.white
+                                  : Colors.green,
+                              padding: const EdgeInsets.symmetric(
                                   horizontal: 20, vertical: 10),
                               shape: RoundedRectangleBorder(
-                                side: event['isApproved']? BorderSide(color: Colors.green):BorderSide(color: Colors.white),
+                                side: event['isApproved']
+                                    ? const BorderSide(color: Colors.green)
+                                    : const BorderSide(color: Colors.white),
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
                             ),
+                            child: event['isApproved']
+                                ? Text('ACCEPTED')
+                                : Text('ACCEPT'),
                           ),
                           ElevatedButton(
                             onPressed: () {
                               onReject(event);
                               Navigator.pop(context);
                             },
-                            child: Text('REJECT'),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.red,
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                   horizontal: 20, vertical: 10),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
                             ),
+                            child: Text('REJECT'),
                           ),
                         ],
                       ),
@@ -299,7 +327,7 @@ class DetailRow extends StatelessWidget {
   final String label;
   final String value;
 
-  DetailRow({required this.label, required this.value});
+  const DetailRow({super.key, required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
@@ -310,12 +338,12 @@ class DetailRow extends StatelessWidget {
         children: [
           Text(
             label,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
-          SizedBox(height: 4.0),
+          const SizedBox(height: 4.0),
           Text(
             value,
-            style: TextStyle(fontSize: 16, color: secondaryColor),
+            style: const TextStyle(fontSize: 16, color: secondaryColor),
           ),
         ],
       ),

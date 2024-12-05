@@ -6,7 +6,7 @@ const secondaryColor = Color.fromRGBO(80, 37, 112, 1);
 
 AppBarTheme customAppBarTheme = AppBarTheme(
   backgroundColor: primaryColor,
-  iconTheme: IconThemeData(color: secondaryColor),
+  iconTheme: const IconThemeData(color: secondaryColor),
   titleTextStyle: GoogleFonts.poppins(
     color: secondaryColor,
     fontSize: 20.0,
@@ -15,7 +15,7 @@ AppBarTheme customAppBarTheme = AppBarTheme(
 
 ThemeData themeData = ThemeData(
   appBarTheme: customAppBarTheme,
-  iconTheme: IconThemeData(color: secondaryColor),
+  iconTheme: const IconThemeData(color: secondaryColor),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ButtonStyle(
       foregroundColor: WidgetStateProperty.all(secondaryColor),
@@ -31,11 +31,11 @@ ThemeData themeData = ThemeData(
   inputDecorationTheme: InputDecorationTheme(
     enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(30),
-      borderSide: BorderSide(color: secondaryColor),
+      borderSide: const BorderSide(color: secondaryColor),
     ),
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(30),
-      borderSide: BorderSide(color: secondaryColor, width: 2.0),
+      borderSide: const BorderSide(color: secondaryColor, width: 2.0),
     ),
     labelStyle: GoogleFonts.poppins(color: secondaryColor),
     hintStyle: GoogleFonts.poppins(color: secondaryColor),

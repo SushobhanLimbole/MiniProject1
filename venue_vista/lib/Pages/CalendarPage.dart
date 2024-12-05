@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:venue_vista/Components/Constants.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:venue_vista/Components/BottomNavigationBar.dart';
+//import 'package:new_venue_vista/Components/BottomNavigationBar.dart';
 import 'package:venue_vista/Components/Drawer.dart';
 
 class CalendarPage extends StatefulWidget {
@@ -11,8 +12,10 @@ class CalendarPage extends StatefulWidget {
   final bool isAdmin;
   final String userEmail;
   final String userName;
-
-  CalendarPage({
+  final String hallId;
+  const CalendarPage({
+    super.key,
+    required this.hallId,
     required this.uid,
     required this.isAdmin,
     required this.userEmail,
@@ -38,6 +41,7 @@ class _CalendarPageState extends State<CalendarPage> {
   DateTime? _selectedDay;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   Map<String, String> slotAvailability = {};
+
   final DateFormat dateFormat = DateFormat('dd-MM-yyyy');
 
   // Date Picker
@@ -51,7 +55,7 @@ class _CalendarPageState extends State<CalendarPage> {
     if (picked != null) {
       setState(() {
         if (isStartDate) {
-         // _selectedStartDate = picked;
+          // _selectedStartDate = picked;
         } else {
           _selectedEndDate = picked;
         }
@@ -71,7 +75,7 @@ class _CalendarPageState extends State<CalendarPage> {
     return "$hours:$minutes";
   }
 
-Future<void> addTopic(
+  Future<void> addTopic(
       {required String eventName,
       required String startDate,
       required String lastDate,
@@ -80,6 +84,7 @@ Future<void> addTopic(
       required Timestamp nowDate,
       required String slot,
       String? collab,
+      required String hallId,
       required String description}) async {
     try {
       debugPrint(widget.uid);
@@ -90,9 +95,11 @@ Future<void> addTopic(
           .doc(eventName)
           .set({
         "eventName": eventNameController.text.trim(),
-        "startDate": DateFormat('dd-MM-yyyy').format(DateTime.parse("$_selectedStartDate")),
+        "startDate": DateFormat('dd-MM-yyyy')
+            .format(DateTime.parse("$_selectedStartDate")),
         //  _selectedStartDate != null ? DateTime(_selectedStartDate!.day) : Timestamp.fromDate(eventstartDate),
-        "lastDate": DateFormat('dd-MM-yyyy').format(DateTime.parse("$_selectedEndDate")),
+        "lastDate": DateFormat('dd-MM-yyyy')
+            .format(DateTime.parse("$_selectedEndDate")),
         // _selectedEndDate != null ? DateTime(_selectedEndDate!.day) : Timestamp.fromDate(eventendDate),
         //"startTime": startTime,
         //  _selectedStartTime != null ? DateTime(_selectedStartTime!.hour) : Timestamp.fromDate(eventendDate),
@@ -104,8 +111,9 @@ Future<void> addTopic(
         "collab": eventCollabController.text.trim(),
         "isApproved": false,
         "isPending": true,
-        "nowDate":DateTime.now(),
-        "slot":selectedslot,
+        "nowDate": DateTime.now(),
+        "slot": selectedslot,
+        "hallId": widget.hallId
       });
       debugPrint("Event added successfully");
     } catch (e) {
@@ -125,26 +133,26 @@ Future<void> addTopic(
     }
     debugPrint("before addTopic method");
     await addTopic(
-      eventName: eventNameController.text.trim(),
-      startDate: "$_selectedStartDate",
-      lastDate: "$_selectedEndDate",
-      speaker: eventSpeakerController.text.trim(),
-      attendee: eventAttendeeController.text.trim(),
-      description: eventDesc.text.trim(),
-      collab: eventCollabController.text.trim(),
-      nowDate: Timestamp.fromDate(DateTime.now()),
-      slot: selectedslot!,
-    );
+        eventName: eventNameController.text.trim(),
+        startDate: "$_selectedStartDate",
+        lastDate: "$_selectedEndDate",
+        speaker: eventSpeakerController.text.trim(),
+        attendee: eventAttendeeController.text.trim(),
+        description: eventDesc.text.trim(),
+        collab: eventCollabController.text.trim(),
+        nowDate: Timestamp.fromDate(DateTime.now()),
+        slot: selectedslot!,
+        hallId: widget.hallId);
     debugPrint("after addTopic method");
   }
 
-  void eventRequestBottomSheet(DateTime focusedDay,List availableSlots) {
+  void eventRequestBottomSheet(DateTime focusedDay, List availableSlots) {
     showModalBottomSheet(
         isScrollControlled: true,
         context: context,
         builder: (context) {
-          _selectedStartDate=focusedDay;
-          return Container(
+          _selectedStartDate = focusedDay;
+          return SizedBox(
             height: MediaQuery.of(context).size.height - 80,
             width: MediaQuery.of(context).size.width,
             child: Padding(
@@ -153,7 +161,7 @@ Future<void> addTopic(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 5),
+                    const SizedBox(height: 5),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -164,14 +172,14 @@ Future<void> addTopic(
                         ),
                       ],
                     ),
-                    SizedBox(height: 15),
+                    const SizedBox(height: 15),
                     TextFormField(
                       controller: eventNameController,
                       decoration: InputDecoration(
                         fillColor: const Color.fromARGB(255, 230, 164, 186),
                         hintText: 'Event Name',
                         hintStyle: GoogleFonts.poppins(),
-                        border: OutlineInputBorder(
+                        border: const OutlineInputBorder(
                             borderSide: BorderSide(),
                             borderRadius:
                                 BorderRadius.all(Radius.circular(15))),
@@ -183,59 +191,61 @@ Future<void> addTopic(
                         return null;
                       },
                     ),
-                    SizedBox(height: 15),
+                    const SizedBox(height: 15),
                     Container(
-                      margin: EdgeInsets.only(left: 10),
+                      margin: const EdgeInsets.only(left: 10),
                       child: Text(
                         'Date & Time',
                         style: GoogleFonts.poppins(
                             fontSize: 20, fontWeight: FontWeight.w500),
                       ),
                     ),
-                    SizedBox(height: 15),
-
+                    const SizedBox(height: 15),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            _selectDate(context, true);
+                            setState(() {});
+                          },
                           style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                                 vertical: 15, horizontal: 20),
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            backgroundColor: Colors.teal,
+                                borderRadius: BorderRadius.circular(40)),
+                            backgroundColor:primaryColor,
                           ),
-                          child: Container(
+                          child: SizedBox(
                             width: 200,
                             child: Center(
                               child: Text(
                                 "Start Date: ${DateFormat('dd-MM-yyyy').format(_selectedStartDate!)}",
                                 style: GoogleFonts.poppins(
-                                    fontSize: 16, color: Colors.white),
+                                    fontSize: 16, color: secondaryColor),
                               ),
                             ),
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 15),
+                    const SizedBox(height: 15),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         ElevatedButton(
                           onPressed: () {
-                            setState(() {});
                             _selectDate(context, false);
+                            setState(() {});
                           },
                           style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                                 vertical: 15, horizontal: 20),
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            backgroundColor: Colors.teal,
+                                borderRadius: BorderRadius.circular(40)),
+                            backgroundColor: primaryColor,
                           ),
-                          child: Container(
+                          child: SizedBox(
                             width: 200,
                             child: Center(
                               child: Text(
@@ -243,20 +253,20 @@ Future<void> addTopic(
                                     ? "End Date: ${DateFormat('dd-MM-yyyy').format(_selectedEndDate!)}"
                                     : "Pick an End Date",
                                 style: GoogleFonts.poppins(
-                                    fontSize: 16, color: Colors.white),
+                                    fontSize: 16, color: secondaryColor),
                               ),
                             ),
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 15),
+                    const SizedBox(height: 15),
                     DropdownButtonFormField<String>(
                       value: selectedslot,
-                      items: availableSlots.map((_selectedStartDate) {
+                      items: availableSlots.map((selectedStartDate) {
                         return DropdownMenuItem<String>(
-                          value: _selectedStartDate,
-                          child: Text(_selectedStartDate),
+                          value: selectedStartDate,
+                          child: Text(selectedStartDate),
                         );
                       }).toList(),
                       onChanged: (value) {
@@ -264,9 +274,9 @@ Future<void> addTopic(
                           selectedslot = value;
                         });
                       },
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Select Slots',
-                        prefixIcon: const Padding(
+                        prefixIcon: Padding(
                           padding: EdgeInsets.all(5),
                           child: Icon(Icons.business),
                         ),
@@ -286,7 +296,7 @@ Future<void> addTopic(
                         fillColor: const Color.fromARGB(255, 230, 164, 186),
                         hintText: 'Speaker',
                         hintStyle: GoogleFonts.poppins(),
-                        border: OutlineInputBorder(
+                        border: const OutlineInputBorder(
                             borderSide: BorderSide(),
                             borderRadius:
                                 BorderRadius.all(Radius.circular(15))),
@@ -298,14 +308,14 @@ Future<void> addTopic(
                         return null;
                       },
                     ),
-                    SizedBox(height: 15),
+                    const SizedBox(height: 15),
                     TextFormField(
                       controller: eventAttendeeController,
                       decoration: InputDecoration(
                         fillColor: const Color.fromARGB(255, 230, 164, 186),
                         hintText: 'Attedees',
                         hintStyle: GoogleFonts.poppins(),
-                        border: OutlineInputBorder(
+                        border: const OutlineInputBorder(
                             borderSide: BorderSide(),
                             borderRadius:
                                 BorderRadius.all(Radius.circular(15))),
@@ -317,14 +327,14 @@ Future<void> addTopic(
                         return null;
                       },
                     ),
-                    SizedBox(height: 15),
+                    const SizedBox(height: 15),
                     TextFormField(
                       controller: eventCollabController,
                       decoration: InputDecoration(
                         fillColor: const Color.fromARGB(255, 230, 164, 186),
                         hintText: 'Collaboration(Optional)',
                         hintStyle: GoogleFonts.poppins(),
-                        border: OutlineInputBorder(
+                        border: const OutlineInputBorder(
                             borderSide: BorderSide(),
                             borderRadius:
                                 BorderRadius.all(Radius.circular(15))),
@@ -336,12 +346,12 @@ Future<void> addTopic(
                         return null;
                       },
                     ),
-                    SizedBox(height: 15),
+                    const SizedBox(height: 15),
                     TextField(
                       style: GoogleFonts.poppins(),
                       controller: eventDesc,
                       maxLines: 5,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: 'Enter the event description',
                         border: OutlineInputBorder(
                             borderSide: BorderSide(),
@@ -349,7 +359,7 @@ Future<void> addTopic(
                                 BorderRadius.all(Radius.circular(15))),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Center(
@@ -358,10 +368,10 @@ Future<void> addTopic(
                           _submitEvent();
                           Navigator.pop(context);
                         },
-                        child: Text("Send Event Request"),
+                        child: const Text("Send Event Request"),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 140,
                     )
                   ],
@@ -380,23 +390,26 @@ Future<void> addTopic(
         centerTitle: true,
         leading: InkWell(
           onTap: () => _scaffoldKey.currentState!.openDrawer(),
-          child: Icon(Icons.sort),
+          child: const Icon(Icons.sort),
         ),
         backgroundColor: const Color.fromRGBO(243, 193, 202, 1),
         title: Text('Calendar', style: GoogleFonts.poppins()),
       ),
       drawer: AppDrawer(
         uid: widget.uid,
+        hallId: widget.hallId,
         isAdmin: widget.isAdmin,
         userEmail: widget.userEmail,
         userName: widget.userName,
       ),
       body: StreamBuilder(
-        stream:
-            FirebaseFirestore.instance.collectionGroup('Events').snapshots(),
+        stream: FirebaseFirestore.instance
+            .collectionGroup('Events')
+            .where("hallId", isEqualTo: widget.hallId)
+            .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(color: Colors.pinkAccent),
             );
           }
@@ -428,8 +441,7 @@ Future<void> addTopic(
             while (!currentDate.isAfter(endDate)) {
               DateTime normalizedDate = DateTime(
                   currentDate.year, currentDate.month, currentDate.day);
-              String dayKey =
-                  "${normalizedDate.toIso8601String().split('T')[0]}";
+              String dayKey = normalizedDate.toIso8601String().split('T')[0];
 
               // If the current slot is "Full Day," override all other slots
 
@@ -458,7 +470,7 @@ Future<void> addTopic(
                   eventData[normalizedDate] = 'Half Day';
                 }
               }
-              currentDate = currentDate.add(Duration(days: 1));
+              currentDate = currentDate.add(const Duration(days: 1));
             }
           }
 
@@ -469,7 +481,7 @@ Future<void> addTopic(
               children: [
                 TableCalendar(
                   firstDay: DateTime.now(),
-                  lastDay: DateTime.now().add(Duration(days: 30)),
+                  lastDay: DateTime.now().add(const Duration(days: 30)),
                   focusedDay: _focusedDay,
                   selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
                   onDaySelected: (selectedDay, focusedDay) {
@@ -485,6 +497,7 @@ Future<void> addTopic(
                       _focusedDay = focusedDay;
                     });
                   },
+                  calendarFormat: CalendarFormat.month,
                   calendarStyle: CalendarStyle(
                     isTodayHighlighted: true,
                     outsideDaysVisible: false,
@@ -496,10 +509,11 @@ Future<void> addTopic(
                   ),
                   headerStyle: HeaderStyle(
                     titleTextStyle: GoogleFonts.poppins(
-                      color: Colors.pinkAccent,
+                      color: secondaryColor,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
+                    formatButtonVisible: false,
                     titleCentered: true,
                   ),
                   calendarBuilders: CalendarBuilders(
@@ -508,7 +522,7 @@ Future<void> addTopic(
                           DateTime(day.year, day.month, day.day);
                       String status = eventData[normalizedDay] ?? 'Available';
                       Color dayColor;
-            
+
                       switch (status) {
                         case 'Available':
                           dayColor = Colors.green;
@@ -522,20 +536,20 @@ Future<void> addTopic(
                         default:
                           dayColor = Colors.transparent;
                       }
-            
+
                       bool isSelected = isSameDay(_selectedDay, day);
                       bool isToday = isSameDay(DateTime.now(), day);
-            
+
                       Color backgroundColor = dayColor == Colors.transparent
                           ? Colors.transparent
                           : dayColor;
-            
+
                       if (isToday) {
                         backgroundColor = Colors.pinkAccent;
                       } else if (isSelected) {
                         backgroundColor = Colors.blue;
                       }
-            
+
                       return Container(
                         height: 35,
                         width: 35,
@@ -563,12 +577,13 @@ Future<void> addTopic(
           );
         },
       ),
-      bottomNavigationBar: BottomNavigatorBar(
-          index: 1,
-          uid: widget.uid,
-          isAdmin: widget.isAdmin,
-          userEmail: widget.userEmail,
-          userName: widget.userName),
+      // bottomNavigationBar: BottomNavigatorBar(
+      //     index: 1,
+      //     hallId: widget.hallId,
+      //     uid: widget.uid,
+      //     isAdmin: widget.isAdmin,
+      //     userEmail: widget.userEmail,
+      //     userName: widget.userName),
     );
   }
 
@@ -594,7 +609,7 @@ Future<void> addTopic(
       String fullDaySlot,
       DateTime focusedDay) {
     // Format the date key to match the storage format in slotAvailability
-    String dateKeyPrefix = "${day.toIso8601String().split('T')[0]}";
+    String dateKeyPrefix = day.toIso8601String().split('T')[0];
 
     // Retrieve the status for each slot
     Map<String, String> slotStatuses = {};
@@ -654,13 +669,13 @@ Future<void> addTopic(
                     height: 30,
                     width: 50,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Colors.green,
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.blue),
+                      border: Border.all(color: Colors.green),
                     ),
-                    child: Center(
+                    child: const Center(
                         child:
-                            Text("Book", style: TextStyle(color: Colors.blue))),
+                            Text("Book", style: TextStyle(color: secondaryColor))),
                   ),
                 ),
                 TextButton(
@@ -671,10 +686,10 @@ Future<void> addTopic(
                     height: 30,
                     width: 50,
                     decoration: BoxDecoration(
-                      color: Colors.blue,
+                      color: Colors.red,
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Center(
+                    child: const Center(
                         child: Text("Cancel",
                             style: TextStyle(color: Colors.white))),
                   ),

@@ -53,7 +53,7 @@ class _DepartmentMonthlyBarChartState extends State<DepartmentMonthlyBarChart> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Report"),
+        title: const Text("Report"),
         centerTitle: true,
         actions: [
           DropdownButton<int>(
@@ -91,11 +91,11 @@ class _DepartmentMonthlyBarChartState extends State<DepartmentMonthlyBarChart> {
         future: _fetchDepartmentBookings(selectedMonth, selectedYear),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(
+            return const Center(
                 child: Text('No booking data available for this period.'));
           }
 
@@ -116,21 +116,22 @@ class _DepartmentMonthlyBarChartState extends State<DepartmentMonthlyBarChart> {
                       sideTitles: SideTitles(
                         showTitles: true,
                         getTitlesWidget: (value, meta) {
-                          if (value.toInt() >= departmentBookings.length)
-                            return SizedBox.shrink();
+                          if (value.toInt() >= departmentBookings.length) {
+                            return const SizedBox.shrink();
+                          }
                           final department =
                               departmentBookings.keys.elementAt(value.toInt());
                           return Padding(
                             padding: const EdgeInsets.only(top: 8.0),
                             child: Text(department,
-                                style: TextStyle(fontSize: 10)),
+                                style: const TextStyle(fontSize: 10)),
                           );
                         },
                         reservedSize: 32,
                       ),
                     ),
                     leftTitles: AxisTitles(
-                      axisNameWidget: Text("No. of Events"),
+                      axisNameWidget: const Text("No. of Events"),
                       drawBelowEverything: true,
                       axisNameSize: 20,
                       sideTitles: SideTitles(
@@ -142,15 +143,15 @@ class _DepartmentMonthlyBarChartState extends State<DepartmentMonthlyBarChart> {
                           return Text(
                             value.toInt().toString(),
                             style:
-                                TextStyle(fontSize: 14, color: Colors.black87),
+                                const TextStyle(fontSize: 14, color: Colors.black87),
                           );
                         },
                       ),
                     ),
                     rightTitles:
-                        AxisTitles(sideTitles: SideTitles(showTitles: false))),
+                        const AxisTitles(sideTitles: SideTitles(showTitles: false))),
                 borderData: FlBorderData(show: false),
-                gridData: FlGridData(show: true),
+                gridData: const FlGridData(show: true),
               ),
             ),
           );

@@ -13,30 +13,30 @@ class Wrapper extends StatefulWidget {
 }
 
 class _WrapperState extends State<Wrapper> {
-  // Function to check the user's role
+  /// Fetches user details like role, userName, and userEmail from Firestore.
   Future<Map<String, String>?> _getUserDetails(User user) async {
     try {
-      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+      final DocumentSnapshot userDoc = await FirebaseFirestore.instance
           .collection('Users')
-          .doc(user.uid)
+          .doc(user.email)
           .get();
 
       if (userDoc.exists) {
-        // Assuming the role and userName are stored in the 'role' and 'userName' fields
-        String userName = userDoc['userName'] ?? 'Unknown';
-        String userRole =
-            userDoc['role'] ?? 'employee'; // Default to 'employee'
-        String userEmail = user.email ?? 'Unknown';
+        final String userName = userDoc['userName'] ?? 'Unknown';
+        final String userRole = userDoc['role'] ?? 'Faculty'; // Default role
+        final String userEmail = user.email ?? 'Unknown';
+
         return {
           'role': userRole,
           'userName': userName,
           'userEmail': userEmail,
         };
       } else {
-        return null; // No user data found
+        debugPrint('No user document found for UID: ${user.email}');
+        return null;
       }
     } catch (e) {
-      // Handle error if fetching user data fails
+      debugPrint('Error fetching user details: $e');
       return null;
     }
   }
@@ -46,65 +46,68 @@ class _WrapperState extends State<Wrapper> {
     return Scaffold(
       body: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+        builder: (context, authSnapshot) {
+          if (authSnapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(
                 color: secondaryColor,
               ),
             );
-          } else if (snapshot.hasError) {
-            return const Center(
-              child: Text("Something went wrong"),
-            );
-          } else {
-            if (snapshot.data == null) {
-              return SignInPage(); // User is not logged in, show sign-in page
-            } else {
-              // User is logged in, check role from Firestore
-              return FutureBuilder<Map<String, String>?>(
-                future: _getUserDetails(snapshot.data!),
-                builder: (context, roleSnapshot) {
-                  if (roleSnapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(
-                        color: secondaryColor,
-                      ),
-                    );
-                  } else if (roleSnapshot.hasError || !roleSnapshot.hasData) {
-                    return const Center(
-                      child: Text("Error retrieving role"),
-                    );
-                  } else {
-                    // Get user details and role
-                    Map<String, String> userDetails = roleSnapshot.data!;
-                    String role = userDetails['role']!;
-                    String userName = userDetails['userName']!;
-                    String userEmail = userDetails['userEmail']!;
-
-                    // Check role and navigate accordingly
-                    if (role == 'admin') {
-                      // Navigate to AttendanceMap for admin
-                      return HomePage(
-                        uid:userEmail,
-                        isAdmin: true,
-                        userName: userName,
-                        userEmail: userEmail,
-                      );
-                    } else {
-                      // Default user, navigate to AttendanceMap or other pages
-                      return HomePage(
-                        uid:userEmail,
-                        isAdmin: false,
-                        userName: userName,
-                        userEmail: userEmail,
-                      );
-                    }
-                  }
-                },
-              );
-            }
           }
+
+          if (authSnapshot.hasError) {
+            return const Center(
+              child: Text("Something went wrong with authentication."),
+            );
+          }
+
+          final User? user = authSnapshot.data;
+
+          if (user == null) {
+            // User is not authenticated; navigate to SignInPage
+            return const SignInPage();
+          }
+
+          // User is authenticated, fetch additional details
+          return FutureBuilder<Map<String, String>?>(
+            future: _getUserDetails(user),
+            builder: (context, roleSnapshot) {
+              if (roleSnapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(
+                    color: secondaryColor,
+                  ),
+                );
+              }
+
+              if (roleSnapshot.hasError) {
+                debugPrint('Error in role snapshot: ${roleSnapshot.error}');
+                return const Center(
+                  child: Text("Error retrieving user role."),
+                );
+              }
+
+              final userDetails = roleSnapshot.data;
+
+              if (userDetails == null) {
+                return const Center(
+                  child: Text("User details not found."),
+                );
+              }
+
+              final String role = userDetails['role']!;
+              final String userName = userDetails['userName']!;
+              final String userEmail = userDetails['userEmail']!;
+
+              // Navigate based on role
+              return HomePage(
+                uid: userEmail,
+                isAdmin: role == 'Admin',
+                userName: userName,
+                userEmail: userEmail,
+              );
+            },
+          );
         },
       ),
     );

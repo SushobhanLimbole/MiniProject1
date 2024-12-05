@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+//import 'package:new_venue_vista/Components/Wrapper.dart';
 import 'package:venue_vista/Pages/HomePage.dart';
 import 'package:venue_vista/Pages/SignUpPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -15,12 +16,8 @@ class _SignInPageState extends State<SignInPage> {
   final _formKey = GlobalKey<FormState>();
   // Key for the form
   final TextEditingController emailController = TextEditingController();
-
   final TextEditingController passwordController = TextEditingController();
-
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
-
+  final TextEditingController confirmPasswordController = TextEditingController();
   final List<String> roles = ['Admin', 'Faculty'];
   String? userId;
   String? selectedRole;
@@ -29,13 +26,12 @@ class _SignInPageState extends State<SignInPage> {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<void> _trySubmit() async {
+   Future<void> _trySubmit() async {
     final isValid = _formKey.currentState?.validate();
     if (isValid ?? false) {
       _formKey.currentState?.save();
 
-      // Show loading SnackBar
-      final loadingSnackBar = SnackBar(
+      final loadingSnackBar = const SnackBar(
         content: Row(
           children: [
             CircularProgressIndicator(),
@@ -46,27 +42,7 @@ class _SignInPageState extends State<SignInPage> {
         duration: Duration(seconds: 5),
       );
       ScaffoldMessenger.of(context).showSnackBar(loadingSnackBar);
-      try {
-        var userQuery = await FirebaseFirestore.instance
-            .collection('Users')
-            .where("email", isEqualTo: emailController.text.trim())
-            .limit(1)
-            .get();
 
-        // Check if a document was found
-        if (userQuery.docs.isNotEmpty) {
-          // Get the first matching document
-          var uid = userQuery.docs.first;
-
-          // Get the user ID (document ID) and other data
-          userId = uid.id; // This is the document ID
-          debugPrint("User ID: $userId");
-        } else {
-          debugPrint("No user found with the provided email.");
-        }
-      } catch (e) {
-        debugPrint("Error fetching user ID: $e");
-      }
       try {
         // Fetch the user document from Firestore based on the email
         QuerySnapshot userSnapshot = await FirebaseFirestore.instance
@@ -76,46 +52,38 @@ class _SignInPageState extends State<SignInPage> {
             .get();
 
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        if (userSnapshot.docs.isNotEmpty) {
-          // Retrieve the first user document
-          DocumentSnapshot userDoc = userSnapshot.docs.first;
-          String userRole = userDoc['role'] ?? 'Faculty';
-          if (userRole == selectedRole) {
-            // Role is valid, proceed with login
-            User? user = await _auth
-                .signInWithEmailAndPassword(
-                  email: emailController.text.trim(),
-                  password: passwordController.text.trim(),
-                )
-                .then((value) => value.user);
-            if (user != null) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('User logged in successfully.')),
-              );
 
-              // Navigate to the MapDemoPage after successful login
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => HomePage(
-                    uid: "$userId",
-                    isAdmin: userRole == 'Admin',
-                    userName: userDoc['userName'],
-                    userEmail: emailController.text.trim(),
-                  ),
-                ),
-              );
-            }
-          } else {
-            // If the role doesn't match, show an error
+        if (userSnapshot.docs.isNotEmpty) {
+          DocumentSnapshot userDoc = userSnapshot.docs.first;
+          String userRole = userDoc['role'];
+
+          User? user = await _auth
+              .signInWithEmailAndPassword(
+                email: emailController.text.trim(),
+                password: passwordController.text.trim(),
+              )
+              .then((value) => value.user);
+
+          if (user != null) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Role does not match.')),
+              const SnackBar(content: Text('User logged in successfully.')),
+            );
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomePage(
+                  uid: userDoc.id, // Pass the user document ID
+                  isAdmin: userRole == 'Admin'?true:false,
+                  userName: userDoc['userName'],
+                  userEmail: emailController.text.trim(),
+                ),
+              ),
             );
           }
         } else {
-          // If no user is found with the provided email
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('User not found.')),
+            const SnackBar(content: Text('User not found.')),
           );
         }
       } on FirebaseAuthException catch (e) {
@@ -134,7 +102,7 @@ class _SignInPageState extends State<SignInPage> {
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('An unexpected error occurred.'),
+            content: const Text('An unexpected error occurred.'),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
@@ -197,7 +165,7 @@ class _SignInPageState extends State<SignInPage> {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your email';
                     }
-                    final emailPattern = r'^[^@]+@[^@]+\.[^@]+$';
+                    const emailPattern = r'^[^@]+@[^@]+\.[^@]+$';
                     if (!RegExp(emailPattern).hasMatch(value)) {
                       return 'Please enter a valid email';
                     }
@@ -246,35 +214,35 @@ class _SignInPageState extends State<SignInPage> {
                 const SizedBox(height: 16.0),
 
                 // Role Dropdown
-                DropdownButtonFormField<String>(
-                  value: selectedRole,
-                  items: roles.map((role) {
-                    return DropdownMenuItem<String>(
-                      value: role,
-                      child: Text(role),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      selectedRole = value;
-                    });
-                  },
-                  decoration: InputDecoration(
-                    labelText: 'Select Role',
-                    prefixIcon: const Padding(
-                      padding: EdgeInsets.all(5),
-                      child: Icon(Icons.person),
-                    ),
-                  ),
-                  validator: (value) {
-                    // Validate if a role is selected
-                    if (value == null) {
-                      return 'Please select a role';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 25.0),
+                // DropdownButtonFormField<String>(
+                //   value: selectedRole,
+                //   items: roles.map((role) {
+                //     return DropdownMenuItem<String>(
+                //       value: role,
+                //       child: Text(role),
+                //     );
+                //   }).toList(),
+                //   onChanged: (value) {
+                //     setState(() {
+                //       selectedRole = value;
+                //     });
+                //   },
+                //   decoration: const InputDecoration(
+                //     labelText: 'Select Role',
+                //     prefixIcon: Padding(
+                //       padding: EdgeInsets.all(5),
+                //       child: Icon(Icons.person),
+                //     ),
+                //   ),
+                //   validator: (value) {
+                //     // Validate if a role is selected
+                //     if (value == null) {
+                //       return 'Please select a role';
+                //     }
+                //     return null;
+                //   },
+                // ),
+                //const SizedBox(height: 25.0),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -313,7 +281,7 @@ class _SignInPageState extends State<SignInPage> {
                       _trySubmit();
                     }
                   },
-                  child: Text(
+                  child: const Text(
                     'Sign In',
                   ),
                 ),
